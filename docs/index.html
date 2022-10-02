@@ -190,7 +190,7 @@ ul.task-list li input[type="checkbox"] {
             var lat_perc = [2.64257076962116e-05, 7.907600749678868e-05, 0.0001311244911329143, 0.00018217503821638917, 0.00023183912325873835, 0.0002797387725848013, 0.0003255094409406019, 0.00036880278590287375, 0.0004092893189752123, 0.0004466609131945014, 0.00048063314816314707, 0.0005109474746600427, 0.0005373731823562532, 0.0005597091556599358, 0.0005777854043274163, 0.0005914643571916001, 0.0006006419091616122, 0.0006052482135254039, 0.0006052482135254039, 0.0006006419091616122, 0.0005914643571916001, 0.0005777854043274163, 0.0005597091556599358, 0.0005373731823562532, 0.0005109474746600427, 0.00048063314816314707, 0.00044666091319450107, 0.0004092893189752123, 0.00036880278590287375, 0.0003255094409406019, 0.0002797387725848013, 0.00023183912325873835, 0.00018217503821638917, 0.0001311244911329143, 7.907600749678868e-05, 2.64257076962116e-05];
             var surface_perc = flatten(lat_perc.map(p => Array.from({length: 72}).fill(p)), [1, 36, 72])[0];
 
-            var url1 = 'https://dvgodoy.github.io/heatingplanet/assets/data/zvalues.dat'
+            var url1 = 'https://heatingplanet.org/assets/data/zvalues.dat'
             var client1 = new XMLHttpRequest();
             client1.open("GET", url1, true);
             client1.responseType = "arraybuffer";
@@ -366,7 +366,7 @@ ul.task-list li input[type="checkbox"] {
                 }
             }
 
-            var url2 = 'https://dvgodoy.github.io/heatingplanet/assets/data/evolution.dat'
+            var url2 = 'https://heatingplanet.org/assets/data/evolution.dat'
             var client2 = new XMLHttpRequest();
             client2.open("GET", url2, true);
             client2.responseType = "arraybuffer";
