@@ -1,0 +1,99 @@
+/* css styles */
+.source {
+    position: relative;
+    left: 1%;
+    top: 2.5%;
+    z-index: 1;
+    font-family: "Open Sans", verdana, arial, sans-serif;
+    font-size: 12px;
+    width: 300px;
+    visibility: hidden;
+}
+.sideplot {
+    position: relative;
+    left: 1%;
+    top: 4.5%;
+    z-index: 1;
+    font-family: "Open Sans", verdana, arial, sans-serif;
+    font-size: 12px;
+    width: 150px;
+}
+.hint {
+  font-family: "Open Sans", verdana, arial, sans-serif;
+  font-size: 12px;
+}
+#wrapper {
+  overflow: hidden;
+  position: absolute;
+}
+#wrapper div {
+  padding-left: 10px;
+}
+#divPlotly {
+  height: 100%;
+  width: 95%;
+}
+#plot {
+  margin-left: 20px;
+  margin-right: 20px;
+  float:left; 
+  width: 70%;
+  height: 90%;
+  margin-right: 30px;
+}
+@media screen and (max-height: 480px) {
+  #plot {
+    min-height: 360px;
+  }
+  #divPlotly {
+    min-height: 360px;
+  }
+}
+@media screen and (min-height: 480px) {
+  #plot {
+    min-height: 480px;
+  }
+  #divPlotly {
+    min-height: 480px;
+  }
+}
+#quarto-margin-sidebar {
+  margin: 20px;
+  overflow:auto;
+  height: 100%;
+  display: inherit !important;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+@media screen and (min-width: 1280px) {
+  #wrapper {
+    height: 90%;
+    width: 100%;
+  }
+}
+@media screen and (max-width: 1280px) {
+  #plot {
+    float: none;
+    margin-right:0;
+    width:auto;
+    position: relative;
+  }
+  #wrapper {
+    width: 95%;
+    min-height: 360px;
+  }
+}
+@media screen and (min-width: 640px) {
+  .hint {
+    height: 0;
+    visibility: hidden;
+  }
+}
+@media screen and (max-width: 640px) {
+  .hint {
+    position: relative;
+    left: 1%;
+    font-family: "Open Sans", verdana, arial, sans-serif;
+    font-size: 12px;    
+  }  
+}

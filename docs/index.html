@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Heating Planet</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+<script src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.0.0/math.js" integrity="sha512-+KihqiIrhYt4/tFb42KiOJ+wr0PM6dVMw9twO1Ju+sZ0OdgurvE/9dy2jAS0Fr0MCVryF2EXxPH9HRXg6CaFgg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script defer src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v2.8.6/dist/cookieconsent.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v2.8.6/dist/cookieconsent.css" media="print" onload="this.media='all'">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script type="text/plain" data-cookiecategory="analytics" async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+<script type="text/plain" data-cookiecategory="analytics">
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){window.dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'GA_MEASUREMENT_ID');
+</script>
+<script src="site_libs/functions.js"></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Heating Planet</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page">Home</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html">About</a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/dvgodoy"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/dvgodoy"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<!-- sidebar -->
+<!-- main -->
+
+<div id="wrapper">
+  <div id="plot">
+      <div id="divPlotly" class="plotly-graph-div">
+        <div class="source">
+            Data Source: 
+            <input type="radio" id="zraw" value="zraw" name="zsource" checked>
+            <label for="zraw">Anomaly</label>
+            <input type="radio" id="zabs" value="zabs" name="zsource">
+            <label for="zabs">Absolute</label>    
+        </div>
+        <div class="sideplot">
+            Show Plots: &nbsp;
+            <input type="checkbox" id="showplot" name="showplot" checked>
+        </div>        
+      </div>
+  </div>
+
+  <!-- margin-sidebar -->
+  <div id="quarto-margin-sidebar">
+        <div class="hint">
+            For better visualization, please tilt your phone horizontally.
+        </div>        
+      <h2>Global Temperature Anomalies</h2>
+      <p>The visualization was built using Plotly and data from NOAA's National Centers for Environmental Information (NCEI).</p>
+      <p>The data, <em>Land and Ocean Temperature Anomalies grid file using GHCN Version 5.0.0</em>, shows temperature anomalies with respect to the 1971-2000 average, in degrees Celsius, for each 5° by 5° grid box, and it can be directly accessed <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/data-access">here</a>.</p>
+      <p>The plot on the top-right shows the evolution of the global average anomaly over time, and it is animated together with the whole map. The plot on the bottom-right shows the evolution of the temperature anomaly for a single 5° by 5° grid box.</p>
+      <p><strong>You can click on any valid (colored) grid box on the map to visualize the evolution of the temperature anomaly in the chosen location.</strong></p>
+      <p>The default projection is <a href="https://en.wikipedia.org/wiki/Mollweide_projection">Mollweide</a> because it is an equal-area projection, that is, it preserves the relative sizes of the grid boxes. A 5° by 5° grid box at the Equator line is approximately 23 times larger than a 5° by 5° grid box at one of the poles, and this should be taken into account while averaging anomalies across the globe.</p>
+  </div>
+
+</div>
+        <script>
+            var grid_size = 5;
+            var long = linspace(-180, (180-grid_size), 360/grid_size);
+            var lat = linspace((90-grid_size), -90, 180/grid_size);
+            var coords = [];
+            linspace((90-grid_size), -90, 180/grid_size).forEach(function(a){coords.push(long.map(function(v){return [[[v, a], [v, a+5], [v+5, a+5], [v+5, a], [v, a]]]}));})
+            coords = math.reshape(coords, [long.length*lat.length, 5, 2]);
+
+            const zeroPad = (num, places) => String(num).padStart(places, '0');
+            const pid = (t, i) => [zeroPad(Math.abs(t[i][1]), 3), t[i][1]>=0?'N':'S', zeroPad(Math.abs(t[i][0]), 3), t[i][0]>=0?'E':'W'].join('');
+            var locations_data = coords.map(function(t){return [pid(t, 0), pid(t, 2)].join(' - ')})
+
+            var features = [];
+            Array.from({length: long.length*lat.length}, (_, i) => features.push({'geometry': {'coordinates': [coords[i]], 'type': 'Polygon'}, 'id': locations_data[i], 'type': 'Feature'}))
+            var geojson_data = {'features': features, 'type': "FeatureCollection"};
+
+            var df = [];
+            var data = null;
+            var geo_data = [];
+            var temps = null;
+            var scatter_data = [];
+            var plotly_data = [];
+            var n_years = 0;
+            var nan_value = -999;
+            var years = [];
+            var steps = [];
+            var frames = [];
+            var zs = null;
+            var zs_min = null;
+            var zs_max = null;
+            var zs_regime = null;
+            var temps = null;
+            var temps_regime = null;
+            var plotly_layout = null;
+            var colorscale = [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]];
+            var z_loaded = false;
+            var lat_perc = [2.64257076962116e-05, 7.907600749678868e-05, 0.0001311244911329143, 0.00018217503821638917, 0.00023183912325873835, 0.0002797387725848013, 0.0003255094409406019, 0.00036880278590287375, 0.0004092893189752123, 0.0004466609131945014, 0.00048063314816314707, 0.0005109474746600427, 0.0005373731823562532, 0.0005597091556599358, 0.0005777854043274163, 0.0005914643571916001, 0.0006006419091616122, 0.0006052482135254039, 0.0006052482135254039, 0.0006006419091616122, 0.0005914643571916001, 0.0005777854043274163, 0.0005597091556599358, 0.0005373731823562532, 0.0005109474746600427, 0.00048063314816314707, 0.00044666091319450107, 0.0004092893189752123, 0.00036880278590287375, 0.0003255094409406019, 0.0002797387725848013, 0.00023183912325873835, 0.00018217503821638917, 0.0001311244911329143, 7.907600749678868e-05, 2.64257076962116e-05];
+            var surface_perc = flatten(lat_perc.map(p => Array.from({length: 72}).fill(p)), [1, 36, 72])[0];
+
+            var url1 = 'https://dvgodoy.github.io/heatingplanet/assets/data/zvalues.dat'
+            var client1 = new XMLHttpRequest();
+            client1.open("GET", url1, true);
+            client1.responseType = "arraybuffer";
+            client1.send();
+            client1.onreadystatechange = function() {
+                if (client1.readyState == XMLHttpRequest.DONE) {
+                    df = new Float32Array(client1.response);
+                    res = dat2array(df);
+                    nan_value = res[0];
+                    series = res[1];
+                    shapes = res[2];
+                    n_years = shapes[0][0];
+
+                    zs = flatten(series[0], shapes[0]);
+                    zs_regime = flatten(series[1], shapes[1]);
+                    years = Array.from({length: first_dim}, (_, i) => i + 1880);
+
+                    temps = zs.map(_ => surface_avg(_, surface_perc, nan_value));
+                    temps_regime = zs_regime.map(_ => surface_avg(_, surface_perc, nan_value));
+
+                    Array.from({length: n_years}, (_, i) => frames.push({
+                        "data": [
+                            {"z": num_to_nan(zs[i], nan_value)},    // geo
+                            {"y": temps.slice(0, i+1)},             // average
+                            {"y": Array.from({length: n_years})},             // measured
+                            {"y": Array.from({length: n_years})},             // regime
+                            {"y": Array.from({length: n_years})},             // imputed
+                            {"y": Array.from({length: n_years})}              // estimated
+                        ],
+                        "name": (1880+i).toString()
+                    }));
+
+                    geo_data.push({
+                        "autocolorscale": false, 
+                        "colorbar": {"title": {"text": "oC"}}, 
+                        "colorscale": [[0.0, "rgb(0,0,131)"], [0.2, "rgb(0,60,170)"], [0.4, "rgb(5,255,255)"], [0.6, "rgb(255,255,0)"], [0.8, "rgb(250,0,0)"], [1.0, "rgb(128,0,0)"]], 
+                        "geojson": geojson_data, 
+                        "locations": locations_data, 
+                        "marker": {"line": {"width": 0}, "opacity": 0.5}, 
+                        "type": "choropleth", 
+                        "visible": true,
+                        "z": num_to_nan(zs[0], nan_value), 
+                        "zmin": -4, 
+                        "zmax": 4,
+                        //"showscale": (window.innerWidth>=1280)
+                    });
+                    // first scatter data
+                    scatter_data.push({
+                        "mode": "lines", 
+                        "type": "scatter", 
+                        "visible": true, 
+                        "x": years, 
+                        "y": temps.slice(0, 1),
+                        "xaxis": "x1", 
+                        "yaxis": "y1", 
+                        "showlegend": false, 
+                        "name": "Average"
+                    });
+                    scatter_data.push({"mode": "lines", "type": "scatter", "visible": true, "x": years, "y": Array.from({length: n_years}), "xaxis": "x2", "yaxis": "y2", "showlegend": true, "name": "Measured", "marker": {"color": "#1f77b4"}});
+                    scatter_data.push({"mode": "lines", "type": "scatter", "visible": true, "x": years, "y": Array.from({length: n_years}), "xaxis": "x2", "yaxis": "y2", "showlegend": false, "name": "Regime", "marker": {"color": "black"}, "line": {"dash": "dash"}});
+                    scatter_data.push({"mode": "markers", "type": "scatter", "visible": true, "x": years, "y": Array.from({length: n_years}), "xaxis": "x2", "yaxis": "y2", "showlegend": true, "name": "Imputed", "marker": {"color": "red"}});
+                    scatter_data.push({"mode": "markers", "type": "scatter", "visible": true, "x": years, "y": Array.from({length: n_years}), "xaxis": "x2", "yaxis": "y2", "showlegend": true, "name": "Estimated", "marker": {"color": "green", "symbol": "cross"}});
+                    plotly_data = geo_data.concat(scatter_data);
+
+                    Array.from({length: n_years}, (_, i) => steps.push({
+                        // duration is zero, otherwise label does not get drawn properly when restarting
+                        "args": [[(1880+i).toString()], 
+                                  {"mode": "immediate", "transition": {"duration": 0}, "frame": {"duration": 0, "redraw": true}, "fromcurrent": true}],
+                        "label": (1880+i).toString(), 
+                        "method": "animate"
+                    }));
+
+                    plotly_layout = {
+                                      "geo": {"domain": {"x": [0.05, 0.65], "y": [0.0, 0.9]}, "projection": {"type": "mollweide"}, "showcountries": true, "showframe": false, "showlakes": false},
+                                      "margin": {"b": 0, "l": 0, "r": 0, "t": 0},
+                                      "shapes": [{"line": {"color": "LightSeaGreen", "dash": "dashdot", "width": 4}, "type": "line", "x0": 1971, "x1": 2000, "y0": 0, "y1": 0},
+                                                 {"fillcolor": "rgb(184, 247, 212)", "layer": "below", "line": {"width": 0}, "opacity": 0.5, "type": "rect", "x0": 1971, "x1": 2000, "xref": "x", "y0": 0, "y1": 1, "yref": "y domain"}],
+                                      "sliders": [{
+                                        "active": 0, 
+                                        "pad": {"t": 0.3}, 
+                                        "steps": steps,
+                                        "transition": {
+                                            "duration": 300,
+                                            "easing": "cubic-in-out"
+                                        },
+                                        "x": 0.1, "y": 0,
+                                        "len": 0.9,
+                                        "xanchor": "left", "yanchor": "top",
+                                        "pad": {"t": (window.innerWidth>=1280)?50:10, "b": 10},
+                                        "currentvalue": {
+                                            "prefix": "Year: ",
+                                            "xanchor": "center",
+                                            "font": {"size": 22, "color": "#666"}
+                                        }
+                                      }],
+                                      "updatemenus": [{"buttons": [{"args": ["geo.projection.type", "mollweide"], "label": "Mollweide", "method": "relayout"},
+                                                                   {"args": ["geo.projection.type", "mercator"], "label": "Mercator", "method": "relayout"},
+                                                                   {"args": ["geo.projection.type", "natural earth"], "label": "Natural", "method": "relayout"}],
+                                                      "direction": "down", 
+                                                      "pad": {"r": 10, "t": 10}, 
+                                                      "showactive": true, 
+                                                      "type": "dropdown", 
+                                                      "x": 0.1, "xanchor": "right", 
+                                                      "y": (window.innerWidth>=1280)?0.9:0.85, "yanchor": "top"},
+                                                      {"x": 0.1, "y": 0, "yanchor": "top", "xanchor": "right",
+                                                       "showactive": false, "direction": "left", "type": "buttons",
+                                                       "pad": {"t": (window.innerWidth>=1280)?87:47, "r": 10},
+                                                       "buttons": [{
+                                                            "method": "animate",
+                                                            "args": [null, {
+                                                                "transition": {"duration": 200},
+                                                                "fromcurrent": true,
+                                                                "frame": {"duration": 500}
+                                                            }],
+                                                            "label": "Play"
+                                                        }, {
+                                                            "method": "animate",
+                                                            "args": [[null], {
+                                                                "mode": "immediate",
+                                                                "fromcurrent": true,
+                                                                "transition": {"duration": 0},
+                                                                "frame": {"duration": 0}
+                                                            }],
+                                                            "label": "Pause"
+                                                        }]}
+                                                    ],
+                                      "template": {
+                                                "data": {
+                                                        "choropleth": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "type": "choropleth"}],
+                                                        "contour": [{"colorbar": {"outlinewidth": 0, "ticks": ""}, "colorscale": colorscale, "type": "contour"}],
+                                                        "scatter": [{"marker": {"colorbar": {"outlinewidth": 0, "ticks": ""}}, "type": "scatter"}],
+                                                },
+                                                "layout": {
+                                                        "annotationdefaults": {"arrowcolor": "#2a3f5f", "arrowhead": 0, "arrowwidth": 1},
+                                                        "coloraxis": {"colorbar": {"outlinewidth": 0, "ticks": ""}},
+                                                        "colorscale": {"diverging": [[0, "#8e0152"], [0.1, "#c51b7d"], [0.2, "#de77ae"], [0.3, "#f1b6da"], [0.4, "#fde0ef"], [0.5, "#f7f7f7"], [0.6, "#e6f5d0"], [0.7, "#b8e186"], [0.8, "#7fbc41"], [0.9, "#4d9221"], [1, "#276419"]], "sequential": colorscale, "sequentialminus": colorscale},
+                                                        "colorway": ["#636efa", "#EF553B", "#00cc96", "#ab63fa", "#FFA15A", "#19d3f3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"],
+                                                        "font": {"color": "#2a3f5f"},
+                                                        "geo": {"bgcolor": "white", "lakecolor": "white", "landcolor": "#E5ECF6", "showlakes": true, "showland": true, "subunitcolor": "white"},
+                                                        "hoverlabel": {"align": "left"},
+                                                        "hovermode": "closest",
+                                                        "mapbox": {"style": "light"},
+                                                        "paper_bgcolor": "white",
+                                                        "plot_bgcolor": "#E5ECF6",
+                                                        "polar": {"angularaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}, "bgcolor": "#E5ECF6", "radialaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}},
+                                                        "scene": {"xaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"},
+                                                                  "yaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"},
+                                                                  "zaxis": {"backgroundcolor": "#E5ECF6", "gridcolor": "white", "gridwidth": 2, "linecolor": "white", "showbackground": true, "ticks": "", "zerolinecolor": "white"}},
+                                                        "shapedefaults": {"line": {"color": "#2a3f5f"}},
+                                                        "ternary": {"aaxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""},
+                                                                    "baxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""},
+                                                                    "bgcolor": "#E5ECF6",
+                                                                    "caxis": {"gridcolor": "white", "linecolor": "white", "ticks": ""}},
+                                                        "title": {"x": 0.05},
+                                                        "xaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2},
+                                                        "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2},
+                                                }
+                                      },
+                                      "annotations": [{"text": "Average", "x": 0.5, "y": 1.1, "xref": "x domain", "yref": "y domain", "showarrow": false, "align": "center"},
+                                                      {"text": locations_data[17*72+36], "x": 0.5, "y": 1.1, "xref": "x2 domain", "yref": "y2 domain", "showarrow": false, "align": "center"},
+                                                      ],
+                                      "legend": {"yanchor": "top", "y": 0.06, "xanchor": "right", "x": 0.995, "font": {"size": 12}},
+                                      "xaxis1": {"domain": [0.75, 1.0], "range": [1879.9, 1879.1+n_years], "showgrid": false},
+                                      "yaxis1": {"domain": [0.525, 0.925], "range": [-1.2, 1.2], "title": {"text": "Anomaly (oC)"}, "showgrid": false},
+                                      "xaxis2": {"domain": [0.75, 1.0], "range": [1879.9, 1879.1+n_years], "showgrid": false, "showticklabels": false},
+                                      "yaxis2": {"domain": [0.05, 0.45], "range": [-4.5, 4.5], "title": {"text": "Anomaly (oC)"}, "anchor": "x2", "showgrid": false},
+                                    }
+
+                    Plotly.react('divPlotly', plotly_data, plotly_layout, {responsive: true, displayModeBar: false}).then(function(){
+                        Plotly.addFrames('divPlotly', frames);
+                    });
+                    z_loaded = true;
+                }
+            }
+
+            var url2 = 'https://dvgodoy.github.io/heatingplanet/assets/data/evolution.dat'
+            var client2 = new XMLHttpRequest();
+            client2.open("GET", url2, true);
+            client2.responseType = "arraybuffer";
+            client2.send();
+            client2.onreadystatechange = function() {
+                if (client2.readyState == XMLHttpRequest.DONE) {
+                    df = new Float32Array(client2.response);
+                    res = dat2array(df);
+                    nan_value = res[0];
+                    series = res[1];
+                    shapes = res[2];
+                    filled = math.reshape(series[0], shapes[0]);
+                    changes = math.reshape(series[1], shapes[1]);
+                    extended = math.reshape(series[2], shapes[2]);
+                    
+                    wait_loaded("z_loaded", function() {
+                        // 2nd scatter plot - 0N0E
+                        gy = 17;
+                        gx = 36;
+                        
+                        function update_frames(gy, gx) {
+                            var series = [];
+                            series.push(num_to_nan(math.reshape(math.subset(zs, math.index(math.range(0, n_years), gy*72+gx)), [n_years]), nan_value));
+                            series.push(num_to_nan(retrieve_vals(gy, gx, changes, false), nan_value));
+                            series.push(retrieve_vals(gy, gx, filled, true, n_years));
+                            series.push(retrieve_vals(gy, gx, extended, true, n_years));
+                            var ys = [];
+                            for (s=0; s<4; s++) {
+                                ys.push(plotly_data[2+s]['y']);
+                            }
+                            for (s=0; s<4; s++) {
+                                for (i=0; i<ys[s].length; i++){
+                                    ys[s][i] = series[s][i];
+                                    frames[i]['data'][2+s]['y'] = series[s];
+                                }
+                            }
+                        }
+                        update_frames(gy, gx);
+                        Plotly.restyle('divPlotly', {});
+                        Plotly.relayout('divPlotly', {'y': []}, [0]);
+
+                        var myPlot = document.getElementById('divPlotly');
+                        myPlot.on('plotly_click', function(clickdata){
+                            loc = clickdata.points[0].location;
+                            if (loc !== undefined) {
+                                pn = clickdata.points[0].pointNumber;
+                                gy = math.floor(pn/72);
+                                gx = pn%72;
+                                update_frames(gy, gx);
+                                plotly_layout['annotations'][1]['text'] = loc;
+                                Plotly.restyle('divPlotly', {});
+                                Plotly.relayout('divPlotly', {'y': []}, [0]);
+                            }
+                        });
+
+                        var zraw = document.getElementById('zraw');
+                        zraw.onclick = function() {
+                            for (i=0; i<n_years; i++){
+                                frames[i]['data'][0]['z'] = num_to_nan(zs[i], nan_value)
+                                frames[i]['data'][1]['y'] = temps.slice(0, i+1);
+                            };
+                            plotly_data[0]['z'] = num_to_nan(zs[plotly_layout['sliders'][0]['active']], nan_value);
+                            plotly_data[1]['y'] = temps.slice(0, plotly_layout['sliders'][0]['active']+1);
+                            plotly_layout['yaxis']['title']['text'] = 'Anomaly (oC)';
+                            Plotly.restyle('divPlotly', {});
+                            Plotly.relayout('divPlotly', {'z': [], 'y': []}, [0]);
+                        };
+                        var zabs = document.getElementById('zabs');
+                        zabs.onclick = function() {
+                            for (i=0; i<n_years; i++){
+                                frames[i]['data'][0]['z'] = num_to_nan(zs_regime[i], nan_value)
+                                frames[i]['data'][1]['y'] = temps_regime.slice(0, i+1);
+                            };
+                            plotly_data[0]['z'] = num_to_nan(zs_regime[plotly_layout['sliders'][0]['active']], nan_value);
+                            plotly_data[1]['y'] = temps_regime.slice(0, plotly_layout['sliders'][0]['active']+1);
+                            plotly_layout['yaxis']['title']['text'] = 'Absolute (oC)';
+                            Plotly.restyle('divPlotly', {});
+                            Plotly.relayout('divPlotly', {'z': [], 'y': []}, [0]);
+                        };
+                        var showplot = document.getElementById('showplot');
+                        showplot.onclick = function() {
+                            plotly_layout['xaxis']['visible'] = showplot.checked;
+                            plotly_layout['yaxis']['visible'] = showplot.checked;
+                            plotly_layout['xaxis2']['visible'] = showplot.checked;
+                            plotly_layout['yaxis2']['visible'] = showplot.checked;
+                            for (i=0; i<2; i++) {
+                                plotly_layout['shapes'][i].visible = showplot.checked;
+                                plotly_layout['annotations'][i].visible = showplot.checked;
+                            }
+                            for (s=0; s<5; s++) {
+                                plotly_data[1+s].visible = showplot.checked;
+                                for (i=0; i<n_years; i++) {
+                                    frames[i]['data'][1+s].visible = showplot.checked;
+                                }
+                            }
+                            if (showplot.checked) {
+                                plotly_layout['template']['layout']['plot_bgcolor'] = '#E5ECF6';
+                                plotly_layout['geo']['domain']['x'] = [0.05, 0.65];
+                            } else {
+                                plotly_layout['template']['layout']['plot_bgcolor'] = '#FFFFFF';
+                                plotly_layout['geo']['domain']['x'] = [0.05, 0.95];
+                            };
+                            Plotly.restyle('divPlotly', {});
+                            Plotly.relayout('divPlotly', {'z': []}, [0]);
+                        };
+                    });
+                }
+            }
+
+
+        </script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+
+<!-- Inline script -->
+<script>
+    window.addEventListener('load', function () {
+        // obtain cookieconsent plugin
+        var cookieconsent = initCookieConsent();
+
+        // run plugin with config object
+        cookieconsent.run({
+            autorun: true,
+            current_lang: 'en',
+            autoclear_cookies: true,
+            page_scripts: true,
+
+            onFirstAction: function(user_preferences, cookie){
+                // callback triggered only once
+            },
+
+            onAccept: function (cookie) {
+                // ... cookieconsent accepted
+            },
+
+            onChange: function (cookie, changed_preferences) {
+                // ... cookieconsent preferences were changed
+            },
+
+            languages: {
+                en: {
+                    consent_modal: {
+                        title: 'I use cookies',
+                        description: 'Hi, this website uses essential cookies to ensure its proper operation and tracking cookies to understand how you interact with it. The latter will be set only upon approval. <a aria-label="Cookie policy" class="cc-link" href="#">Read more</a>',
+                        primary_btn: {
+                            text: 'Accept',
+                            role: 'accept_all'              // 'accept_selected' or 'accept_all'
+                        },
+                        secondary_btn: {
+                            text: 'Settings',
+                            role: 'settings'                // 'settings' or 'accept_necessary'
+                        }
+                    },
+                    settings_modal: {
+                        title: 'Cookie preferences',
+                        save_settings_btn: 'Save settings',
+                        accept_all_btn: 'Accept all',
+                        reject_all_btn: 'Reject all',       // optional, [v.2.5.0 +]
+                        cookie_table_headers: [
+                            {col1: 'Name'},
+                            {col2: 'Domain'},
+                            {col3: 'Expiration'},
+                            {col4: 'Description'},
+                            {col5: 'Type'}
+                        ],
+                        blocks: [
+                            {
+                                title: 'Cookie usage',
+                                description: 'This website uses cookies to ensure the basic functionalities of the website and to enhance your online experience. You can choose for each category to opt-in/out whenever you want.'
+                            }, {
+                                title: 'Analytics cookies',
+                                description: 'These cookies collect information about how you use the website, which pages you visited and which links you clicked on. All of the data is anonymized and cannot be used to identify you.',
+                                toggle: {
+                                    value: 'analytics',
+                                    enabled: false,
+                                    readonly: false
+                                },
+                                cookie_table: [
+                                    {
+                                        col1: '^_ga',
+                                        col2: 'google.com',
+                                        col3: '2 years',
+                                        col4: 'description ...',
+                                        col5: 'Permanent cookie',
+                                        is_regex: true
+                                    },
+                                    {
+                                        col1: '_gid',
+                                        col2: 'google.com',
+                                        col3: '1 day',
+                                        col4: 'description ...',
+                                        col5: 'Permanent cookie'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        });
+    });
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
