@@ -204,9 +204,9 @@ ul.task-list li input[type="checkbox"] {
                     shapes = res[2];
                     n_years = shapes[0][0];
 
-                    zs = flatten(series[0], shapes[0]);
-                    zs_regime = flatten(series[1], shapes[1]);
-                    years = Array.from({length: first_dim}, (_, i) => i + 1880);
+                    zs = array_chunks(series[0], 36*72);
+                    zs_regime = array_chunks(series[1], 36*72);
+                    years = Array.from({length: n_years}, (_, i) => i + 1880);
 
                     temps = zs.map(_ => surface_avg(_, surface_perc, nan_value));
                     temps_regime = zs_regime.map(_ => surface_avg(_, surface_perc, nan_value));
@@ -389,7 +389,7 @@ ul.task-list li input[type="checkbox"] {
                         
                         function update_frames(gy, gx) {
                             var series = [];
-                            series.push(num_to_nan(math.reshape(math.subset(zs, math.index(math.range(0, n_years), gy*72+gx)), [n_years]), nan_value));
+                            series.push(num_to_nan(zs.map(_ => _[gy*72+gx]), nan_value));
                             series.push(num_to_nan(retrieve_vals(gy, gx, changes, false), nan_value));
                             series.push(retrieve_vals(gy, gx, filled, true, n_years));
                             series.push(retrieve_vals(gy, gx, extended, true, n_years));

@@ -67,9 +67,8 @@ function dat2array(dat) {
         start = dat.slice(ndims+offset+2, ndims+offset+3)[0];
         length = dat.slice(ndims+offset+3, ndims+offset+4)[0];
         values = Array.from(dat.slice(start, start+length));
-        data = Array.from(math.reshape(values, new_shape));
         offset = start+length-1;
-        return data;
+        return values;
     });
     return [nan_value, series, shapes];
 }
@@ -84,3 +83,5 @@ function surface_avg(z, surface_perc, nan_value){
     var tot = math.sum(valid.map(_ => _[0]*_[1]));
     return tot/area;
 }
+
+const array_chunks = (array, chunk_size) => Array(Math.ceil(array.length / chunk_size)).fill().map((_, index) => index * chunk_size).map(begin => array.slice(begin, begin + chunk_size));
