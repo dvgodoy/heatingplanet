@@ -2,17 +2,14 @@
 .source {
     position: relative;
     left: 1%;
-    top: 2.5%;
     z-index: 1;
     font-family: "Open Sans", verdana, arial, sans-serif;
     font-size: 12px;
     width: 300px;
-    visibility: hidden;
 }
 .sideplot {
     position: relative;
     left: 1%;
-    top: 4.5%;
     z-index: 1;
     font-family: "Open Sans", verdana, arial, sans-serif;
     font-size: 12px;
@@ -48,6 +45,9 @@
   #divPlotly {
     min-height: 360px;
   }
+  .sideplot {
+    padding-top: 220px;
+  }
 }
 @media screen and (min-height: 480px) {
   #plot {
@@ -55,6 +55,9 @@
   }
   #divPlotly {
     min-height: 480px;
+  }
+  .sideplot {
+    padding-top: 10px;
   }
 }
 #quarto-margin-sidebar {
@@ -65,13 +68,13 @@
   padding-right: 20px;
   padding-bottom: 20px;
 }
-@media screen and (min-width: 1280px) {
+@media screen and (min-width: 1200px) {
   #wrapper {
     height: 90%;
     width: 100%;
   }
 }
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1200px) {
   #plot {
     float: none;
     margin-right:0;

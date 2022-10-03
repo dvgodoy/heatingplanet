@@ -25,11 +25,11 @@ ul.task-list li input[type="checkbox"] {
 <script src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.0.0/math.js" integrity="sha512-+KihqiIrhYt4/tFb42KiOJ+wr0PM6dVMw9twO1Ju+sZ0OdgurvE/9dy2jAS0Fr0MCVryF2EXxPH9HRXg6CaFgg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<script defer src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v2.8.6/dist/cookieconsent.js"></script>
+<!-- <script defer src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v2.8.6/dist/cookieconsent.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v2.8.6/dist/cookieconsent.css" media="print" onload="this.media='all'">
-
+ -->
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script type="text/plain" data-cookiecategory="analytics" async src="https://www.googletagmanager.com/gtag/js?id=G-70241HZ9J5"></script>
+<!-- <script type="text/plain" data-cookiecategory="analytics" async src="https://www.googletagmanager.com/gtag/js?id=G-70241HZ9J5"></script>
 <script type="text/plain" data-cookiecategory="analytics">
     window.dataLayer = window.dataLayer || [];
     function gtag(){window.dataLayer.push(arguments);}
@@ -37,7 +37,8 @@ ul.task-list li input[type="checkbox"] {
 
     gtag('config', 'G-70241HZ9J5');
 </script>
-<script src="site_libs/functions.js"></script>
+ -->
+ <script src="site_libs/functions.js"></script>
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
@@ -98,6 +99,9 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link active" href="./index.html" aria-current="page">Home</a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./absolute.html">Absolute Change</a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./about.html">About</a>
   </li>  
   <li class="nav-item compact">
@@ -123,6 +127,10 @@ ul.task-list li input[type="checkbox"] {
 <div id="wrapper">
   <div id="plot">
       <div id="divPlotly" class="plotly-graph-div">
+        <div class="sideplot">
+            Show Plots: &nbsp;
+            <input type="checkbox" id="showplot" name="showplot" checked>
+        </div>        
         <div class="source">
             Data Source: 
             <input type="radio" id="zraw" value="zraw" name="zsource" checked>
@@ -130,10 +138,6 @@ ul.task-list li input[type="checkbox"] {
             <input type="radio" id="zabs" value="zabs" name="zsource">
             <label for="zabs">Absolute</label>    
         </div>
-        <div class="sideplot">
-            Show Plots: &nbsp;
-            <input type="checkbox" id="showplot" name="showplot" checked>
-        </div>        
       </div>
   </div>
 
@@ -147,6 +151,7 @@ ul.task-list li input[type="checkbox"] {
       <p>The data, <em>Land and Ocean Temperature Anomalies grid file using GHCN Version 5.0.0</em>, shows temperature anomalies with respect to the 1971-2000 average, in degrees Celsius, for each 5° by 5° grid box, and it can be directly accessed <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/data-access">here</a>.</p>
       <p>The plot on the top-right shows the evolution of the global average anomaly over time, and it is animated together with the whole map. The plot on the bottom-right shows the evolution of the temperature anomaly for a single 5° by 5° grid box.</p>
       <p><strong>You can click on any valid (colored) grid box on the map to visualize the evolution of the temperature anomaly in the chosen location.</strong></p>
+      <p><strong>The <em>Absolute</em> data source shows you an estimation of the absolute change in temperature (instead of NOAA's raw data). For more details on the method used to arrive at these estimatives, please read the <a href="./absolute.html">Absolute Change</a> section.</strong>
       <p>The default projection is <a href="https://en.wikipedia.org/wiki/Mollweide_projection">Mollweide</a> because it is an equal-area projection, that is, it preserves the relative sizes of the grid boxes. A 5° by 5° grid box at the Equator line is approximately 23 times larger than a 5° by 5° grid box at one of the poles, and this should be taken into account while averaging anomalies across the globe.</p>
   </div>
 
@@ -380,7 +385,7 @@ ul.task-list li input[type="checkbox"] {
                     shapes = res[2];
                     filled = math.reshape(series[0], shapes[0]);
                     changes = math.reshape(series[1], shapes[1]);
-                    extended = math.reshape(series[2], shapes[2]);
+                    //extended = math.reshape(series[2], shapes[2]);
                     
                     wait_loaded("z_loaded", function() {
                         // 2nd scatter plot - 0N0E
@@ -392,12 +397,12 @@ ul.task-list li input[type="checkbox"] {
                             series.push(num_to_nan(zs.map(_ => _[gy*72+gx]), nan_value));
                             series.push(num_to_nan(retrieve_vals(gy, gx, changes, false), nan_value));
                             series.push(retrieve_vals(gy, gx, filled, true, n_years));
-                            series.push(retrieve_vals(gy, gx, extended, true, n_years));
+                            //series.push(retrieve_vals(gy, gx, extended, true, n_years));
                             var ys = [];
-                            for (s=0; s<4; s++) {
+                            for (s=0; s<3; s++) {
                                 ys.push(plotly_data[2+s]['y']);
                             }
-                            for (s=0; s<4; s++) {
+                            for (s=0; s<3; s++) {
                                 for (i=0; i<ys[s].length; i++){
                                     ys[s][i] = series[s][i];
                                     frames[i]['data'][2+s]['y'] = series[s];
@@ -456,7 +461,7 @@ ul.task-list li input[type="checkbox"] {
                                 plotly_layout['shapes'][i].visible = showplot.checked;
                                 plotly_layout['annotations'][i].visible = showplot.checked;
                             }
-                            for (s=0; s<5; s++) {
+                            for (s=0; s<(1+3); s++) {
                                 plotly_data[1+s].visible = showplot.checked;
                                 for (i=0; i<n_years; i++) {
                                     frames[i]['data'][1+s].visible = showplot.checked;
@@ -579,7 +584,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 
 <!-- Inline script -->
-<script>
+<!-- <script>
     window.addEventListener('load', function () {
         // obtain cookieconsent plugin
         var cookieconsent = initCookieConsent();
@@ -666,6 +671,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
     });
 </script>
+ -->
 </div> <!-- /content -->
 
 
