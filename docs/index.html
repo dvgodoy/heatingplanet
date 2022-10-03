@@ -147,13 +147,14 @@ ul.task-list li input[type="checkbox"] {
             For better visualization, please tilt your phone horizontally.
         </div>        
       <h2>Global Temperature Anomalies</h2>
-      <p>The visualization was built using Plotly and data from NOAA's National Centers for Environmental Information (NCEI).</p>
-      <p>The data, <em>Land and Ocean Temperature Anomalies grid file using GHCN Version 5.0.0</em>, shows temperature anomalies with respect to the 1971-2000 average, in degrees Celsius, for each 5° by 5° grid box, and it can be directly accessed <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/data-access">here</a>.</p>
+      <p>The planet is heating up. How much? How fast? This website is my own personal attempt at understanding better the dynamics of our heating planet through data analysis and an interactive visualization. I always wanted to click on any part of the globe and see how its temperature evolved over time myself, now <strong>you</strong> can do it too!</p>
       <p>The plot on the top-right shows the evolution of the global average anomaly over time, and it is animated together with the whole map. The plot on the bottom-right shows the evolution of the temperature anomaly for a single 5° by 5° grid box.</p>
       <p><strong>You can click on any valid (colored) grid box on the map to visualize the evolution of the temperature anomaly in the chosen location.</strong></p>
       <p><strong>The <em>Absolute</em> data source shows you an estimation of the absolute change in temperature (instead of NOAA's raw data). For more details on the method used to arrive at these estimatives, please read the <a href="./absolute.html">Absolute Change</a> section.</strong>
       <p>The default projection is <a href="https://en.wikipedia.org/wiki/Mollweide_projection">Mollweide</a> because it is an equal-area projection, that is, it preserves the relative sizes of the grid boxes. A 5° by 5° grid box at the Equator line is approximately 23 times larger than a 5° by 5° grid box at one of the poles, and this should be taken into account while averaging anomalies across the globe.</p>
-  </div>
+      <p>The visualization was built using Plotly and data from NOAA's National Centers for Environmental Information (NCEI).</p>
+      <p>The data, <em>Land and Ocean Temperature Anomalies grid file using GHCN Version 5.0.0</em>, shows temperature anomalies with respect to the 1971-2000 average, in degrees Celsius, for each 5° by 5° grid box, and it can be directly accessed <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/data-access">here</a>.</p>
+</div>
 
 </div>
         <script>
@@ -257,7 +258,7 @@ ul.task-list li input[type="checkbox"] {
                     scatter_data.push({"mode": "lines", "type": "scatter", "visible": true, "x": years, "y": Array.from({length: n_years}), "xaxis": "x2", "yaxis": "y2", "showlegend": true, "name": "Measured", "marker": {"color": "#1f77b4"}});
                     scatter_data.push({"mode": "lines", "type": "scatter", "visible": true, "x": years, "y": Array.from({length: n_years}), "xaxis": "x2", "yaxis": "y2", "showlegend": false, "name": "Regime", "marker": {"color": "black"}, "line": {"dash": "dash"}});
                     scatter_data.push({"mode": "markers", "type": "scatter", "visible": true, "x": years, "y": Array.from({length: n_years}), "xaxis": "x2", "yaxis": "y2", "showlegend": true, "name": "Imputed", "marker": {"color": "red"}});
-                    scatter_data.push({"mode": "markers", "type": "scatter", "visible": true, "x": years, "y": Array.from({length: n_years}), "xaxis": "x2", "yaxis": "y2", "showlegend": true, "name": "Estimated", "marker": {"color": "green", "symbol": "cross"}});
+                    //scatter_data.push({"mode": "markers", "type": "scatter", "visible": true, "x": years, "y": Array.from({length: n_years}), "xaxis": "x2", "yaxis": "y2", "showlegend": true, "name": "Estimated", "marker": {"color": "green", "symbol": "cross"}});
                     plotly_data = geo_data.concat(scatter_data);
 
                     Array.from({length: n_years}, (_, i) => steps.push({
@@ -354,8 +355,8 @@ ul.task-list li input[type="checkbox"] {
                                                         "yaxis": {"automargin": true, "gridcolor": "white", "linecolor": "white", "ticks": "", "title": {"standoff": 15}, "zerolinecolor": "white", "zerolinewidth": 2},
                                                 }
                                       },
-                                      "annotations": [{"text": "Average", "x": 0.5, "y": 1.1, "xref": "x domain", "yref": "y domain", "showarrow": false, "align": "center"},
-                                                      {"text": locations_data[17*72+36], "x": 0.5, "y": 1.1, "xref": "x2 domain", "yref": "y2 domain", "showarrow": false, "align": "center"},
+                                      "annotations": [{"text": "Global Average", "x": 0.5, "y": 1.1, "xref": "x domain", "yref": "y domain", "showarrow": false, "align": "center"},
+                                                      {"text": "Location: " + locations_data[17*72+36], "x": 0.5, "y": 1.1, "xref": "x2 domain", "yref": "y2 domain", "showarrow": false, "align": "center"},
                                                       ],
                                       "legend": {"yanchor": "top", "y": 0.06, "xanchor": "right", "x": 0.995, "font": {"size": 12}},
                                       "xaxis1": {"domain": [0.75, 1.0], "range": [1879.9, 1879.1+n_years], "showgrid": false},
