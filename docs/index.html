@@ -138,6 +138,15 @@ ul.task-list li input[type="checkbox"] {
             <input type="radio" id="zabs" value="zabs" name="zsource">
             <label for="zabs">Absolute</label>    
         </div>
+        <div class="geomask">
+            Coverage: 
+            <input type="radio" id="land" value="land" name="landsea">
+            <label for="land">Land</label>
+            <input type="radio" id="sea" value="sea" name="landsea">
+            <label for="sea">Sea</label>    
+            <input type="radio" id="both" value="both" name="landsea" checked>
+            <label for="both">Land+Sea</label>    
+        </div>
       </div>
   </div>
 
@@ -185,15 +194,22 @@ ul.task-list li input[type="checkbox"] {
             var steps = [];
             var frames = [];
             var zs = null;
-            var zs_min = null;
-            var zs_max = null;
+            var zs_sea = null;
+            var zs_land = null;
             var zs_regime = null;
+            var zs_regime_sea = null;
+            var zs_regime_land = null;
             var temps = null;
+            var temps_sea = null;
+            var temps_land = null;
             var temps_regime = null;
+            var temps_regime_sea = null;
+            var temps_regime_land = null;
             var plotly_layout = null;
             var colorscale = [[0.0, "#0d0887"], [0.1111111111111111, "#46039f"], [0.2222222222222222, "#7201a8"], [0.3333333333333333, "#9c179e"], [0.4444444444444444, "#bd3786"], [0.5555555555555556, "#d8576b"], [0.6666666666666666, "#ed7953"], [0.7777777777777778, "#fb9f3a"], [0.8888888888888888, "#fdca26"], [1.0, "#f0f921"]];
             var z_loaded = false;
             var lat_perc = [2.64257076962116e-05, 7.907600749678868e-05, 0.0001311244911329143, 0.00018217503821638917, 0.00023183912325873835, 0.0002797387725848013, 0.0003255094409406019, 0.00036880278590287375, 0.0004092893189752123, 0.0004466609131945014, 0.00048063314816314707, 0.0005109474746600427, 0.0005373731823562532, 0.0005597091556599358, 0.0005777854043274163, 0.0005914643571916001, 0.0006006419091616122, 0.0006052482135254039, 0.0006052482135254039, 0.0006006419091616122, 0.0005914643571916001, 0.0005777854043274163, 0.0005597091556599358, 0.0005373731823562532, 0.0005109474746600427, 0.00048063314816314707, 0.00044666091319450107, 0.0004092893189752123, 0.00036880278590287375, 0.0003255094409406019, 0.0002797387725848013, 0.00023183912325873835, 0.00018217503821638917, 0.0001311244911329143, 7.907600749678868e-05, 2.64257076962116e-05];
+            var mask = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
             var surface_perc = flatten(lat_perc.map(p => Array.from({length: 72}).fill(p)), [1, 36, 72])[0];
 
             var url1 = 'https://heatingplanet.org/assets/data/zvalues.dat'
@@ -211,11 +227,23 @@ ul.task-list li input[type="checkbox"] {
                     n_years = shapes[0][0];
 
                     zs = array_chunks(series[0], 36*72);
+                    zs_land = zs.map(_ => zip(_, mask).map(t=>[nan_value,t[0]][t[1]]));
+                    zs_sea = zs.map(_ => zip(_, mask).map(t=>[t[0],nan_value][t[1]]));
                     zs_regime = array_chunks(series[1], 36*72);
+                    zs_regime_land = zs_regime.map(_ => zip(_, mask).map(t=>[nan_value,t[0]][t[1]]));
+                    zs_regime_sea = zs_regime.map(_ => zip(_, mask).map(t=>[t[0],nan_value][t[1]]));
                     years = Array.from({length: n_years}, (_, i) => i + 1880);
 
                     temps = zs.map(_ => surface_avg(_, surface_perc, nan_value));
+                    temps_land = zs_land.map(_ => surface_avg(_, surface_perc, nan_value));
+                    temps_sea = zs_sea.map(_ => surface_avg(_, surface_perc, nan_value));
+                    //temps_land = zs.map(_ => surface_avg(zip(_, mask).map(t=>[nan_value,t[0]][t[1]]), surface_perc, nan_value));
+                    //temps_sea = zs.map(_ => surface_avg(zip(_, mask).map(t=>[t[0],nan_value][t[1]]), surface_perc, nan_value));
                     temps_regime = zs_regime.map(_ => surface_avg(_, surface_perc, nan_value));
+                    temps_regime_land = zs_regime_land.map(_ => surface_avg(_, surface_perc, nan_value));
+                    temps_regime_sea = zs_regime_sea.map(_ => surface_avg(_, surface_perc, nan_value));
+                    //temps_regime_land = zs_regime.map(_ => surface_avg(zip(_, mask).map(t=>[nan_value,t[0]][t[1]]), surface_perc, nan_value));
+                    //temps_regime_sea = zs_regime.map(_ => surface_avg(zip(_, mask).map(t=>[t[0],nan_value][t[1]]), surface_perc, nan_value));
 
                     Array.from({length: n_years}, (_, i) => frames.push({
                         "data": [
@@ -285,7 +313,7 @@ ul.task-list li input[type="checkbox"] {
                                         "x": 0.1, "y": 0,
                                         "len": 0.9,
                                         "xanchor": "left", "yanchor": "top",
-                                        "pad": {"t": (window.innerWidth>=1280)?50:10, "b": 10},
+                                        "pad": {"t": (window.innerWidth>=1200)?50:10, "b": 10},
                                         "currentvalue": {
                                             "prefix": "Year: ",
                                             "xanchor": "center",
@@ -300,10 +328,10 @@ ul.task-list li input[type="checkbox"] {
                                                       "showactive": true, 
                                                       "type": "dropdown", 
                                                       "x": 0.1, "xanchor": "right", 
-                                                      "y": (window.innerWidth>=1280)?0.9:0.85, "yanchor": "top"},
+                                                      "y": (window.innerWidth>=1200)?0.9:0.83, "yanchor": "top"},
                                                       {"x": 0.1, "y": 0, "yanchor": "top", "xanchor": "right",
                                                        "showactive": false, "direction": "left", "type": "buttons",
-                                                       "pad": {"t": (window.innerWidth>=1280)?87:47, "r": 10},
+                                                       "pad": {"t": (window.innerWidth>=1200)?87:47, "r": 10},
                                                        "buttons": [{
                                                             "method": "animate",
                                                             "args": [null, {
@@ -360,7 +388,7 @@ ul.task-list li input[type="checkbox"] {
                                                       ],
                                       "legend": {"yanchor": "top", "y": 0.06, "xanchor": "right", "x": 0.995, "font": {"size": 12}},
                                       "xaxis1": {"domain": [0.75, 1.0], "range": [1879.9, 1879.1+n_years], "showgrid": false},
-                                      "yaxis1": {"domain": [0.525, 0.925], "range": [-1.2, 1.2], "title": {"text": "Anomaly (oC)"}, "showgrid": false},
+                                      "yaxis1": {"domain": [0.525, 0.925], "range": [-1.5, 1.5], "title": {"text": "Anomaly (oC)"}, "showgrid": false},
                                       "xaxis2": {"domain": [0.75, 1.0], "range": [1879.9, 1879.1+n_years], "showgrid": false, "showticklabels": false},
                                       "yaxis2": {"domain": [0.05, 0.45], "range": [-4.5, 4.5], "title": {"text": "Anomaly (oC)"}, "anchor": "x2", "showgrid": false},
                                     }
@@ -392,6 +420,17 @@ ul.task-list li input[type="checkbox"] {
                         // 2nd scatter plot - 0N0E
                         gy = 17;
                         gx = 36;
+
+                        function get_mask() {
+                          var landmask = document.getElementById('land');
+                          var bothmask = document.getElementById('both');
+                          return (bothmask.checked?2:(landmask.checked?1:0));
+                        }
+
+                        function get_source() {
+                          var zabs = document.getElementById('zabs');
+                          return zabs.checked;
+                        }
                         
                         function update_frames(gy, gx) {
                             var series = [];
@@ -428,29 +467,48 @@ ul.task-list li input[type="checkbox"] {
                             }
                         });
 
+                        function update_zt(st, mt) {
+                          const idx = st*3+mt;
+                          var zt = [zs_sea, zs_land, zs, zs_regime_sea, zs_regime_land, zs_regime];
+                          var lt = [temps_sea, temps_land, temps, temps_regime_sea, temps_regime_land, temps_regime];
+
+                          for (i=0; i<n_years; i++){
+                              frames[i]['data'][0]['z'] = num_to_nan(zt[idx][i], nan_value)
+                              frames[i]['data'][1]['y'] = lt[idx].slice(0, i+1);
+                          };
+
+                          plotly_data[0]['z'] = num_to_nan(zt[idx][plotly_layout['sliders'][0]['active']], nan_value);
+                          plotly_data[1]['y'] = lt[idx].slice(0, plotly_layout['sliders'][0]['active']+1);
+                          plotly_layout['yaxis']['range'] = st?[-.1, 1.5]:[-1.5, 1.5]
+                          plotly_layout['yaxis']['title']['text'] = 'Anomaly (oC)';
+                          for (i=0; i<2; i++) {
+                              plotly_layout['shapes'][i].visible = (st!=1);
+                          }
+
+                          Plotly.restyle('divPlotly', {});
+                          Plotly.relayout('divPlotly', {'z': [], 'y': []}, [0]);
+                        }
+
+                        var land = document.getElementById('land');
+                        land.onclick = function() {
+                            update_zt(get_source(), 1);
+                        }
+                        var sea = document.getElementById('sea');
+                        sea.onclick = function() {
+                            update_zt(get_source(), 0);
+                        }
+                        var both = document.getElementById('both');
+                        both.onclick = function() {
+                            update_zt(get_source(), 2);
+                        }
+
                         var zraw = document.getElementById('zraw');
                         zraw.onclick = function() {
-                            for (i=0; i<n_years; i++){
-                                frames[i]['data'][0]['z'] = num_to_nan(zs[i], nan_value)
-                                frames[i]['data'][1]['y'] = temps.slice(0, i+1);
-                            };
-                            plotly_data[0]['z'] = num_to_nan(zs[plotly_layout['sliders'][0]['active']], nan_value);
-                            plotly_data[1]['y'] = temps.slice(0, plotly_layout['sliders'][0]['active']+1);
-                            plotly_layout['yaxis']['title']['text'] = 'Anomaly (oC)';
-                            Plotly.restyle('divPlotly', {});
-                            Plotly.relayout('divPlotly', {'z': [], 'y': []}, [0]);
+                            update_zt(0, get_mask());
                         };
                         var zabs = document.getElementById('zabs');
                         zabs.onclick = function() {
-                            for (i=0; i<n_years; i++){
-                                frames[i]['data'][0]['z'] = num_to_nan(zs_regime[i], nan_value)
-                                frames[i]['data'][1]['y'] = temps_regime.slice(0, i+1);
-                            };
-                            plotly_data[0]['z'] = num_to_nan(zs_regime[plotly_layout['sliders'][0]['active']], nan_value);
-                            plotly_data[1]['y'] = temps_regime.slice(0, plotly_layout['sliders'][0]['active']+1);
-                            plotly_layout['yaxis']['title']['text'] = 'Absolute (oC)';
-                            Plotly.restyle('divPlotly', {});
-                            Plotly.relayout('divPlotly', {'z': [], 'y': []}, [0]);
+                            update_zt(1, get_mask());
                         };
                         var showplot = document.getElementById('showplot');
                         showplot.onclick = function() {

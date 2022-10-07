@@ -15,6 +15,14 @@
     font-size: 12px;
     width: 150px;
 }
+.geomask {
+    position: relative;
+    left: 1%;
+    z-index: 1;
+    font-family: "Open Sans", verdana, arial, sans-serif;
+    font-size: 12px;
+    width: 300px;
+}
 .hint {
   font-family: "Open Sans", verdana, arial, sans-serif;
   font-size: 12px;
