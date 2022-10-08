@@ -54,7 +54,7 @@
     min-height: 360px;
   }
   .sideplot {
-    padding-top: 220px;
+    margin-top: 220px;
   }
 }
 @media screen and (min-height: 480px) {
@@ -65,7 +65,7 @@
     min-height: 480px;
   }
   .sideplot {
-    padding-top: 10px;
+    margin-top: 10px;
   }
 }
 #quarto-margin-sidebar {
