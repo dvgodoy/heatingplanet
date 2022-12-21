@@ -152,12 +152,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <a class="nav-link" href="./about.html">About</a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/dvgodoy"><i class="bi bi-github" role="img">
 </i> 
  </a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/dvgodoy"><i class="bi bi-twitter" role="img">
 </i> 
  </a>
   </li>  
@@ -184,7 +184,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#missing-data-imputation" id="toc-missing-data-imputation" class="nav-link" data-scroll-target="#missing-data-imputation"><span class="toc-section-number">6</span>  Missing Data Imputation</a></li>
   <li><a href="#change-point-detection-cpd" id="toc-change-point-detection-cpd" class="nav-link" data-scroll-target="#change-point-detection-cpd"><span class="toc-section-number">7</span>  Change Point Detection (CPD)</a></li>
   <li><a href="#absolute-changes-in-temperature" id="toc-absolute-changes-in-temperature" class="nav-link" data-scroll-target="#absolute-changes-in-temperature"><span class="toc-section-number">8</span>  Absolute Changes in Temperature</a></li>
-  <li><a href="#saving-to-file" id="toc-saving-to-file" class="nav-link" data-scroll-target="#saving-to-file"><span class="toc-section-number">9</span>  Saving to File</a></li>
+  <li><a href="#over-land-and-sea" id="toc-over-land-and-sea" class="nav-link" data-scroll-target="#over-land-and-sea"><span class="toc-section-number">9</span>  Over Land and Sea</a>
+  <ul class="collapse">
+  <li><a href="#anomalies" id="toc-anomalies" class="nav-link" data-scroll-target="#anomalies"><span class="toc-section-number">9.1</span>  Anomalies</a></li>
+  <li><a href="#absolute-changes" id="toc-absolute-changes" class="nav-link" data-scroll-target="#absolute-changes"><span class="toc-section-number">9.2</span>  Absolute Changes</a></li>
+  </ul></li>
+  <li><a href="#saving-to-file" id="toc-saving-to-file" class="nav-link" data-scroll-target="#saving-to-file"><span class="toc-section-number">10</span>  Saving to File</a></li>
   </ul>
 </nav>
     </div>
@@ -207,6 +212,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
+<section>
+  <p>You can follow along in a <a href="https://colab.research.google.com/github/dvgodoy/AccompanyingNotebooks/blob/main/Visualizing%20Global%20Warming.ipynb" target="_blank">Google Colab notebook</a></p>
+</section>
+
 <section id="motivation" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Motivation</h1>
 <p>I was always a bit annoyed by the arbitrary choice of a baseline to compute the average temperature anomaly. Of course, I know that the plot itself doesn’t change, and a different baseline only shifts the vertical axis, since the <em>zero</em> depends on the time span used as baseline.</p>
@@ -214,11 +223,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Even worse, the NOAA’s website makes it very confusing even for seasoned professionals when it mentions, literally, <strong>four</strong> different spans to refer to the same data!</p>
 <p>In the page corresponding to the data we’re using here, the <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/">GHCN Gridded Products</a>, we see:</p>
 <ul>
-<li>1991 to 2020 in <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/">Maps</a></li>
-<li>1961 to 1990, and 1981 to 2010 in <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/development">Data Set Development</a></li>
-<li>1971 to 2000 in <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/data-access">Data Access</a>, the one the data is actually adjusted to</li>
+<li>1991 to 2020 in <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/" target="_blank">Maps</a></li>
+<li>1961 to 1990, and 1981 to 2010 in <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/development" target="_blank">Data Set Development</a></li>
+<li>1971 to 2000 in <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/data-access" target="_blank">Data Access</a>, the one the data is actually adjusted to</li>
 </ul>
-<p>Moreover, given the very nature of the dataset, NOAA recommends in the <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/note">Note</a> section:</p>
+<p>Moreover, given the very nature of the dataset, NOAA recommends in the <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/note" target="_blank">Note</a> section:</p>
 <blockquote class="blockquote">
 <p>“These gridded data sets were developed to produce the most accurate time series possible. However, this required that months and grid boxes be treated independently through time. The use of these data sets is most appropriate for analyzing the change in temperature within a particular grid box, or set of grid boxes, over a span of years.”</p>
 </blockquote>
@@ -272,47 +281,82 @@ Warning
 <section id="data" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Data</h1>
 <p>We’re using data from NOAA’s National Centers for Environmental Information (NCEI).</p>
-<p>The data, <em>Land and Ocean Temperature Anomalies grid file using GHCN Version 5.0.0</em>, shows temperature anomalies with respect to the 1971-2000 average, in degrees Celsius, for each 5° by 5° grid box, and it can be directly accessed <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/data-access">here</a>.</p>
+<p>The data, <em>Land and Ocean Temperature Anomalies grid file using GHCN Version 5.0.0</em>, shows temperature anomalies with respect to the 1971-2000 average, in degrees Celsius, for each 5° by 5° grid box, and it can be directly accessed <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/data-access" target="_blank">here</a>.</p>
+<div class="cell" data-execution_count="2">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download(url<span class="op">=</span><span class="va">None</span>, cached_etag<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> url <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            base <span class="op">=</span> <span class="st">b'https://www.ncei.noaa.gov/data/noaa-global-surface-temperature/v5/access/gridded/'</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            resp <span class="op">=</span> requests.get(base)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>            start <span class="op">=</span> resp.content.find(<span class="st">b'href="NOAAGlobalTemp'</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            end <span class="op">=</span> resp.content.find(<span class="st">b'&gt;'</span>, start)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            fname <span class="op">=</span> resp.content[start<span class="op">+</span><span class="dv">6</span>:end<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            url <span class="op">=</span> base<span class="op">+</span>fname</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> os.path.exists(fname):</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            resp <span class="op">=</span> requests.head(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> resp.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                headers <span class="op">=</span> resp.headers</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                etag <span class="op">=</span> headers[<span class="st">'ETag'</span>]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> (cached_etag <span class="kw">is</span> <span class="va">None</span>) <span class="kw">or</span> etag <span class="op">!=</span> cached_etag:</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                    local_filename <span class="op">=</span> url.split(<span class="st">b'/'</span>)[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>                    r <span class="op">=</span> requests.get(url, stream<span class="op">=</span><span class="va">True</span>, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> r.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">with</span> <span class="bu">open</span>(local_filename, <span class="st">'wb'</span>) <span class="im">as</span> f:</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                            <span class="cf">for</span> chunk <span class="kw">in</span> r.iter_content(chunk_size<span class="op">=</span><span class="dv">8192</span>):</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                                f.write(chunk)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> fname.decode(<span class="st">'utf-8'</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <div class="cell" data-execution_count="3">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> noaa_temperatures(fname, yearly<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="dv">1971</span>, </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                      span<span class="op">=</span><span class="dv">30</span>, stat<span class="op">=</span><span class="st">'mean'</span>, grid_size<span class="op">=</span><span class="dv">5</span>):</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Reads NetCDF file</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    ds <span class="op">=</span> nc.Dataset(fname)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Anomaly data (z)</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    anom <span class="op">=</span> ds[<span class="st">'anom'</span>][:].data</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Value used to replace missing values</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    nanval <span class="op">=</span> ds[<span class="st">'anom'</span>].missing_value</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Original shape is (n_years, 1, 36, 72)</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    gridded <span class="op">=</span> anom.squeeze()</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    gridded[gridded <span class="op">==</span> nanval] <span class="op">=</span> np.nan</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    stat <span class="op">=</span> <span class="st">'mean'</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    funcs <span class="op">=</span> {<span class="st">'mean'</span>: np.mean, <span class="st">'max'</span>: np.<span class="bu">max</span>, <span class="st">'min'</span>: np.<span class="bu">min</span>}</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gets the number of full years in the file</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    n_years <span class="op">=</span> gridded.shape[<span class="dv">0</span>]<span class="op">//</span><span class="dv">12</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    end <span class="op">=</span> start <span class="op">+</span> span <span class="op">-</span> <span class="dv">1</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (start <span class="op">!=</span> <span class="dv">1971</span>) <span class="kw">or</span> (end <span class="op">!=</span> <span class="dv">2000</span>):</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        polygons <span class="op">=</span> surface_polygons(grid_size)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        surface_perc <span class="op">=</span> surface_area(polygons, perc<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Computes weighted average using surface area of grid boxes</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        adjustment <span class="op">=</span> np.mean(surface_stat(gridded[(start<span class="op">-</span><span class="dv">1880</span>)<span class="op">*</span><span class="dv">12</span>:(end<span class="op">-</span><span class="dv">1880</span><span class="op">+</span><span class="dv">1</span>)<span class="op">*</span><span class="dv">12</span>], </span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                                          surface_perc))</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Adjusts baseline</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        gridded <span class="op">=</span> gridded <span class="op">-</span> adjustment</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Computes the average over each year</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    griddedy <span class="op">=</span> np.array([funcs[stat](gridded[i<span class="op">*</span><span class="dv">12</span>:(i<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span><span class="dv">12</span>], axis<span class="op">=</span><span class="dv">0</span>) </span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                         <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_years)])</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># NetCDF has latitudes from -87.5 to 87.5 (it uses the centers of the </span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># grid boxes) but we need to flip it upside down to use in Plotly</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    griddedy <span class="op">=</span> griddedy[:, ::<span class="op">-</span><span class="dv">1</span>]</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># NetCDF has longitudes from 0 to 360, but we need to rearrange it from </span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># -180 to 180 to use in Plotly, so we concatenate the last 36 columns </span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (180 to 360 = -180 to 0) to the first 36 columns (0 to 180)</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    griddedy <span class="op">=</span> np.concatenate([griddedy[:, :, <span class="dv">36</span>:], griddedy[:, :, :<span class="dv">36</span>]], axis<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> griddedy <span class="cf">if</span> yearly <span class="cf">else</span> gridded</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> netCDF4 <span class="im">as</span> nc</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> noaa_temperatures(fname, yearly<span class="op">=</span><span class="va">True</span>, start<span class="op">=</span><span class="dv">1971</span>, </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                      span<span class="op">=</span><span class="dv">30</span>, stat<span class="op">=</span><span class="st">'mean'</span>, grid_size<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Reads NetCDF file</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    ds <span class="op">=</span> nc.Dataset(fname)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Anomaly data (z)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    anom <span class="op">=</span> ds[<span class="st">'anom'</span>][:].data</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Value used to replace missing values</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    nanval <span class="op">=</span> ds[<span class="st">'anom'</span>].missing_value</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Original shape is (n_years, 1, 36, 72)</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    gridded <span class="op">=</span> anom.squeeze()</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    gridded[gridded <span class="op">==</span> nanval] <span class="op">=</span> np.nan</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    stat <span class="op">=</span> <span class="st">'mean'</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    funcs <span class="op">=</span> {<span class="st">'mean'</span>: np.mean, <span class="st">'max'</span>: np.<span class="bu">max</span>, <span class="st">'min'</span>: np.<span class="bu">min</span>}</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gets the number of full years in the file</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    n_years <span class="op">=</span> gridded.shape[<span class="dv">0</span>]<span class="op">//</span><span class="dv">12</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    end <span class="op">=</span> start <span class="op">+</span> span <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (start <span class="op">!=</span> <span class="dv">1971</span>) <span class="kw">or</span> (end <span class="op">!=</span> <span class="dv">2000</span>):</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        polygons <span class="op">=</span> surface_polygons(grid_size)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        surface_perc <span class="op">=</span> surface_area(polygons, perc<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Computes weighted average using surface area of grid boxes</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        adjustment <span class="op">=</span> np.mean(surface_stat(gridded[(start<span class="op">-</span><span class="dv">1880</span>)<span class="op">*</span><span class="dv">12</span>:(end<span class="op">-</span><span class="dv">1880</span><span class="op">+</span><span class="dv">1</span>)<span class="op">*</span><span class="dv">12</span>], </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                                          surface_perc))</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Adjusts baseline</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        gridded <span class="op">=</span> gridded <span class="op">-</span> adjustment</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Computes the average over each year</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    griddedy <span class="op">=</span> np.array([funcs[stat](gridded[i<span class="op">*</span><span class="dv">12</span>:(i<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span><span class="dv">12</span>], axis<span class="op">=</span><span class="dv">0</span>) </span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                         <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_years)])</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># NetCDF has latitudes from -87.5 to 87.5 (it uses the centers of the </span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># grid boxes) but we need to flip it upside down to use in Plotly</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    griddedy <span class="op">=</span> griddedy[:, ::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># NetCDF has longitudes from 0 to 360, but we need to rearrange it from </span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># -180 to 180 to use in Plotly, so we concatenate the last 36 columns </span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (180 to 360 = -180 to 0) to the first 36 columns (0 to 180)</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    griddedy <span class="op">=</span> np.concatenate([griddedy[:, :, <span class="dv">36</span>:], griddedy[:, :, :<span class="dv">36</span>]], axis<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> griddedy <span class="cf">if</span> yearly <span class="cf">else</span> gridded</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>The <code>download()</code> function retrieves the data from NOAA, and the <code>noaa_temperatures()</code> returns a 3D Numpy array containing the yearly averages for each grid box (36 x 72 boxes). It is possible to adjust the baseline for the tempeature anomalies from the default 1971-2000 to any other span of years.</p>
@@ -330,9 +374,9 @@ Important
 </div>
 </div>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fname <span class="op">=</span> download()</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>griddedy <span class="op">=</span> noaa_temperatures(fname, yearly<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>griddedy.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fname <span class="op">=</span> download()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>griddedy <span class="op">=</span> noaa_temperatures(fname, yearly<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>griddedy.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>(142, 36, 72)</code></pre>
 </div>
@@ -343,7 +387,7 @@ Important
 </section>
 <section id="grid-and-projections" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Grid and Projections</h1>
-<p>The default projection is the <a href="https://en.wikipedia.org/wiki/Mollweide_projection">Mollweide</a> projection because it is an equal-area projection, that is, it preserves the relative sizes of the grid boxes. A 5° by 5° grid box at the Equator line is approximately 23 times larger than a 5° by 5° grid box at one of the poles, and this should be taken into account while averaging anomalies across the globe.</p>
+<p>The default projection is the <a href="https://en.wikipedia.org/wiki/Mollweide_projection" target="_blank">Mollweide</a> projection because it is an equal-area projection, that is, it preserves the relative sizes of the grid boxes. A 5° by 5° grid box at the Equator line is approximately 23 times larger than a 5° by 5° grid box at one of the poles, and this should be taken into account while averaging anomalies across the globe.</p>
 <div class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div id="fig-mollweide" class="quarto-figure quarto-figure-center anchored">
@@ -356,81 +400,113 @@ Important
 </div>
 <p>The functions below compute the percentage of the globe’s surface contained in each and every 5-by-5 degrees grid box:</p>
 <div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>polygons <span class="op">=</span> surface_polygons(grid_size<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>surface_perc <span class="op">=</span> surface_area(polygons, perc<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install area</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> area <span class="im">import</span> area</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_polygon(coords, size):</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    left_long, bottom_lat <span class="op">=</span> coords</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([[[left_long, bottom_lat],</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                      [left_long, bottom_lat <span class="op">+</span> size],</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                      [left_long <span class="op">+</span> size, bottom_lat <span class="op">+</span> size],</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                      [left_long <span class="op">+</span> size, bottom_lat],</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                      [left_long, bottom_lat]]], dtype<span class="op">=</span>np.float32)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> surface_polygons(grid_size<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">long</span>, lat <span class="op">=</span> np.meshgrid(np.arange(<span class="op">-</span><span class="dv">180</span>, <span class="dv">180</span>, grid_size), </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>                            np.arange(<span class="dv">90</span><span class="op">-</span>grid_size, <span class="op">-</span><span class="dv">90</span><span class="op">-</span>grid_size, <span class="op">-</span>grid_size))</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    coords <span class="op">=</span> np.dstack([<span class="bu">long</span>, lat])</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    polygons <span class="op">=</span> np.apply_along_axis(func1d<span class="op">=</span>partial(make_polygon, size<span class="op">=</span>grid_size), </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                                   axis<span class="op">=</span><span class="dv">2</span>, arr<span class="op">=</span>coords)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> polygons</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> surface_area(polygons, perc<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    meridian_surface_area <span class="op">=</span> np.array(<span class="bu">list</span>(<span class="bu">map</span>(area, </span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                            <span class="bu">map</span>(<span class="kw">lambda</span> c: {<span class="st">'type'</span>: <span class="st">'Polygon'</span>, <span class="st">'coordinates'</span>: c.tolist()}, </span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                            polygons[:, <span class="dv">0</span>]))))<span class="op">/</span><span class="fl">1e6</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    surface_area <span class="op">=</span> np.tile(meridian_surface_area.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), polygons.shape[<span class="dv">1</span>])</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    surface_perc <span class="op">=</span> (surface_area <span class="op">/</span> surface_area.<span class="bu">sum</span>())</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> surface_perc <span class="cf">if</span> perc <span class="cf">else</span> surface_area</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<p>The same result can be achieve using a simple cosine function over the latitudes at the center of each grid box, referred by NOAA as <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/global-average">cosine weighting</a>:</p>
 <div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">87.5</span>, <span class="fl">87.5</span>, <span class="dv">36</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cosines <span class="op">=</span> np.cos(lat<span class="op">/</span><span class="dv">180</span><span class="op">*</span>np.pi)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>cosines <span class="op">=</span> cosines<span class="op">/</span>(<span class="dv">72</span><span class="op">*</span>cosines.<span class="bu">sum</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>polygons <span class="op">=</span> surface_polygons(grid_size<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>surface_perc <span class="op">=</span> surface_area(polygons, perc<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>The same result can be achieve using a simple cosine function over the latitudes at the center of each grid box, referred by NOAA as <a href="https://www.ncei.noaa.gov/access/monitoring/ghcn-gridded-products/global-average" target="_blank">cosine weighting</a>:</p>
 <div class="cell" data-execution_count="9">
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">87.5</span>, <span class="fl">87.5</span>, <span class="dv">36</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>cosines <span class="op">=</span> np.cos(lat<span class="op">/</span><span class="dv">180</span><span class="op">*</span>np.pi)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>cosines <span class="op">=</span> cosines<span class="op">/</span>(<span class="dv">72</span><span class="op">*</span>cosines.<span class="bu">sum</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="10">
+<div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>Text(0.5, 1.0, 'Surface area of a 5-by-5 degrees grid box')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="absolute_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
+<p><img src="absolute_files/figure-html/cell-11-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
 <section id="temperature-anomalies" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Temperature Anomalies</h1>
 <p>Now we can compute the average global anomaly weighted by the surface area of the grid boxes, not counting missing data.</p>
-<div class="cell" data-execution_count="10">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> surface_stat(data, surface_perc, stat<span class="op">=</span><span class="st">'mean'</span>):</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Average anomaly weighted by surface area, not counting missing data</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    data_mean <span class="op">=</span> np.array([np.nansum(ev <span class="op">*</span> surface_perc) <span class="op">/</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                          (<span class="op">~</span>np.isnan(ev) <span class="op">*</span> surface_perc).<span class="bu">sum</span>() </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                          <span class="cf">for</span> ev <span class="kw">in</span> data])</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> stat <span class="op">==</span> <span class="st">'mean'</span>:</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> data_mean</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> stat <span class="op">==</span> <span class="st">'std'</span>:</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        data_var <span class="op">=</span> [np.nansum((ev <span class="op">-</span> ev_mean) <span class="op">**</span> <span class="dv">2</span> <span class="op">*</span> surface_perc) <span class="op">/</span> </span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                              (<span class="op">~</span>np.isnan(ev) <span class="op">*</span> surface_perc).<span class="bu">sum</span>() </span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">for</span> ev, ev_mean <span class="kw">in</span> <span class="bu">zip</span>(data, data_mean)]</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.sqrt(data_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>These are the average global anomalies with respect to the 1971-2000 average:</p>
 <div class="cell" data-execution_count="11">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>avg_temp <span class="op">=</span> surface_stat(griddedy, surface_perc)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>avg_temp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> surface_stat(data, surface_perc, stat<span class="op">=</span><span class="st">'mean'</span>):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Average anomaly weighted by surface area, not counting missing data</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    data_mean <span class="op">=</span> np.array([np.nansum(ev <span class="op">*</span> surface_perc) <span class="op">/</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                          (<span class="op">~</span>np.isnan(ev) <span class="op">*</span> surface_perc).<span class="bu">sum</span>() </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                          <span class="cf">for</span> ev <span class="kw">in</span> data])</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> stat <span class="op">==</span> <span class="st">'mean'</span>:</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> data_mean</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> stat <span class="op">==</span> <span class="st">'std'</span>:</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        data_var <span class="op">=</span> [np.nansum((ev <span class="op">-</span> ev_mean) <span class="op">**</span> <span class="dv">2</span> <span class="op">*</span> surface_perc) <span class="op">/</span> </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                              (<span class="op">~</span>np.isnan(ev) <span class="op">*</span> surface_perc).<span class="bu">sum</span>() </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">for</span> ev, ev_mean <span class="kw">in</span> <span class="bu">zip</span>(data, data_mean)]</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.sqrt(data_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<pre><code>array([-0.49040517, -0.42640984, -0.4501344 , -0.54361733, -0.65312965,
-       -0.55727405, -0.52217539, -0.60998217, -0.52090297, -0.41504064,
-       -0.63962642, -0.60986579, -0.65473334, -0.69056367, -0.65487515,
-       -0.62069087, -0.44596375, -0.42243461, -0.62026229, -0.52627162,
-       -0.39377437, -0.47255557, -0.63087155, -0.73131404, -0.77620984,
-       -0.65267418, -0.55622029, -0.73383994, -0.76423131, -0.73207139,
-       -0.70305171, -0.76428098, -0.66780868, -0.64435368, -0.47254251,
-       -0.41023309, -0.64005227, -0.71519683, -0.65357198, -0.57490523,
-       -0.5554808 , -0.45848703, -0.5467363 , -0.56028976, -0.54642186,
-       -0.49404915, -0.37506068, -0.47987741, -0.49419296, -0.63032366,
-       -0.40723178, -0.36059279, -0.43182238, -0.55395911, -0.40894764,
-       -0.45732789, -0.4206011 , -0.31420012, -0.31789399, -0.30104638,
-       -0.17343342, -0.04507401, -0.18998909, -0.20513829, -0.03826748,
-       -0.1500386 , -0.29561027, -0.34690677, -0.35984154, -0.36330008,
-       -0.45330106, -0.30084738, -0.26084233, -0.16263568, -0.40363231,
-       -0.43880239, -0.50342084, -0.23517682, -0.17391467, -0.21231317,
-       -0.25260908, -0.20197015, -0.19219163, -0.17505876, -0.4492755 ,
-       -0.37807454, -0.31324477, -0.31261297, -0.34156166, -0.20498813,
-       -0.25041461, -0.38749686, -0.27546437, -0.11170245, -0.37279272,
-       -0.30405625, -0.39141602, -0.10668805, -0.19571924, -0.08526681,
-       -0.04434497,  0.01278888, -0.11869109,  0.04697251, -0.14785713,
-       -0.15757651, -0.07080541,  0.07593977,  0.08581962, -0.01262859,
-        0.14421966,  0.0828533 , -0.07326519, -0.02707226,  0.04222761,
-        0.16466974,  0.01674365,  0.21072811,  0.35305309,  0.14390712,
-        0.12960248,  0.27025706,  0.31848434,  0.33468245,  0.27861425,
-        0.36319536,  0.32961664,  0.312321  ,  0.23507969,  0.33654589,
-        0.41432372,  0.26552093,  0.32406343,  0.3662596 ,  0.4349947 ,
-        0.62627734,  0.6920348 ,  0.59963278,  0.51818839,  0.63898567,
-        0.67217742,  0.53352703])</code></pre>
+</div>
+<p>These are the average global anomalies with respect to the 1971-2000 average:</p>
+<div class="cell" data-execution_count="12">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>avg_temp <span class="op">=</span> surface_stat(griddedy, surface_perc)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>avg_temp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>array([-0.49950845, -0.437659  , -0.46099328, -0.55762834, -0.66325144,
+       -0.55927735, -0.5296677 , -0.61390813, -0.52221157, -0.41688996,
+       -0.64482477, -0.61349774, -0.65583242, -0.69150886, -0.65121656,
+       -0.62195114, -0.44614686, -0.42208863, -0.61661892, -0.52107259,
+       -0.39073078, -0.46883892, -0.62728571, -0.72594027, -0.76846173,
+       -0.64734485, -0.55134399, -0.72619441, -0.76130973, -0.72785092,
+       -0.69972305, -0.75875122, -0.66646819, -0.64330766, -0.47295105,
+       -0.40953497, -0.64000969, -0.71576234, -0.65454381, -0.57661185,
+       -0.55576413, -0.46010078, -0.54557568, -0.56007732, -0.5460153 ,
+       -0.49508586, -0.37550539, -0.48066778, -0.49368916, -0.63079376,
+       -0.40662835, -0.3620246 , -0.43417767, -0.55512125, -0.40984992,
+       -0.45844197, -0.42133779, -0.31418626, -0.31750286, -0.2998834 ,
+       -0.17384875, -0.0441839 , -0.19072324, -0.20550301, -0.03651162,
+       -0.14753947, -0.29445738, -0.3460578 , -0.35940049, -0.3616485 ,
+       -0.45255908, -0.30141405, -0.2614704 , -0.16359548, -0.4036462 ,
+       -0.43811772, -0.50331773, -0.23410685, -0.1732868 , -0.21081136,
+       -0.25137586, -0.20037309, -0.19060011, -0.1735941 , -0.44836399,
+       -0.37708389, -0.31270695, -0.31256246, -0.34134812, -0.20479953,
+       -0.2498834 , -0.38640911, -0.27439695, -0.11041791, -0.37162896,
+       -0.3035485 , -0.39112852, -0.10629708, -0.19548852, -0.08478207,
+       -0.04385898,  0.01332938, -0.11793198,  0.04759796, -0.14719811,
+       -0.15664772, -0.07000922,  0.07627796,  0.08557043, -0.01269871,
+        0.14363659,  0.081649  , -0.07584615, -0.02908075,  0.04030949,
+        0.16373958,  0.01630613,  0.20947407,  0.35191738,  0.14264881,
+        0.12752382,  0.26871631,  0.31656927,  0.33398008,  0.27793616,
+        0.3629874 ,  0.32961243,  0.31112634,  0.23295334,  0.33479465,
+        0.41345646,  0.26483886,  0.32429365,  0.36625862,  0.43520278,
+        0.62679989,  0.69281455,  0.59971238,  0.51962469,  0.64176325,
+        0.67709032,  0.53795811])</code></pre>
 </div>
 </div>
 <div class="callout-note callout callout-style-default callout-captioned">
@@ -446,10 +522,10 @@ Note
 <p>Note: if you compute the average from 1971 to 2000 (<code>avg_temp[91:120].mean()</code>) it won’t result in exactly <strong>zero</strong> as one would expect, but <strong>-0.0518</strong> degrees instead. Unfortunately, I couldn’t figure out why this is the case in NOAA’s data.</p>
 </div>
 </div>
-<div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>avg_temp[<span class="dv">91</span>:<span class="dv">120</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
-<pre><code>-0.051824857209641896</code></pre>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>avg_temp[<span class="dv">91</span>:<span class="dv">120</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>-0.05189353308685528</code></pre>
 </div>
 </div>
 <p>Apart from this minor difference, the choice of window for taking the average against which the global anomaly is computed is arbitrary. As mentioned in the motivation, this is my <strong>pet peeve</strong> because it makes particularly difficult to make a point if the baseline is constantly changing.</p>
@@ -480,27 +556,27 @@ Tip
 <p>Nonetheless, it would be very helpful to have an absolute measure of the changes in temperature over time. And that’s what we’re trying to accomplish here.</p>
 </div>
 </div>
-<div class="cell" data-execution_count="13">
+<div class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display">
-<p><img src="absolute_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+<p><img src="absolute_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>However, the averages do not tell the whole story. It is much more interesting to look at the temperature anomalies recorded on each and every grid box.</p>
-<div class="cell" data-execution_count="14">
+<div class="cell" data-execution_count="15">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>year_ini <span class="op">=</span> <span class="dv">2021</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>year_end <span class="op">=</span> <span class="dv">2021</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_projection(griddedy[year_ini<span class="op">-</span><span class="dv">1880</span>:year_end<span class="op">-</span><span class="dv">1880</span><span class="op">+</span><span class="dv">1</span>], </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                      seq_offset<span class="op">=</span>year_ini, </span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                      add_line<span class="op">=</span><span class="va">True</span>, animate<span class="op">=</span><span class="va">True</span>, </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                      colorscale<span class="op">=</span><span class="st">'Jet'</span>, colorbar_title<span class="op">=</span><span class="st">'oC'</span>, </span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                      zmin<span class="op">=-</span><span class="dv">4</span>, zmax<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>year_ini <span class="op">=</span> <span class="dv">2021</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>year_end <span class="op">=</span> <span class="dv">2021</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_projection(griddedy[year_ini<span class="op">-</span><span class="dv">1880</span>:year_end<span class="op">-</span><span class="dv">1880</span><span class="op">+</span><span class="dv">1</span>], </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                      seq_offset<span class="op">=</span>year_ini, </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                      add_line<span class="op">=</span><span class="va">True</span>, animate<span class="op">=</span><span class="va">True</span>, </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                      colorscale<span class="op">=</span><span class="st">'Jet'</span>, colorbar_title<span class="op">=</span><span class="st">'oC'</span>, </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                      zmin<span class="op">=-</span><span class="dv">4</span>, zmax<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-execution_count="15">
-<div class="cell-output cell-output-display" data-execution_count="15">
-<p><img src="absolute_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
+<div class="cell" data-execution_count="16">
+<div class="cell-output cell-output-display" data-execution_count="16">
+<p><img src="absolute_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>The plot above isn’t interactive, but if we look at individual grid boxes, we’ll see that many of them have many missing data points. That’s totally expected, as data wasn’t collected in remote places in the late 19th or early 20th centuries.</p>
@@ -508,16 +584,16 @@ Tip
 <section id="time-series" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Time Series</h1>
 <p>Let’s take at look at a grid box close to Antarctica. Its measurements started in the late 1950s, and there are some years missing.</p>
-<div class="cell" data-execution_count="16">
+<div class="cell" data-execution_count="17">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>gy, gx <span class="op">=</span> <span class="dv">33</span>, <span class="dv">69</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_evolution(griddedy, gy, gx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gy, gx <span class="op">=</span> <span class="dv">33</span>, <span class="dv">69</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_evolution(griddedy, gy, gx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-execution_count="17">
-<div class="cell-output cell-output-display" data-execution_count="17">
-<p><img src="absolute_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+<div class="cell" data-execution_count="18">
+<div class="cell-output cell-output-display" data-execution_count="18">
+<p><img src="absolute_files/figure-html/cell-19-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -525,13 +601,13 @@ Tip
 <h1 data-number="6"><span class="header-section-number">6</span> Missing Data Imputation</h1>
 <p>The first step we need to take is to impute <em>some</em> of the missing data. We’ll use some simple linear interpolation, but only in those cases where the <strong>gap</strong> in the data isn’t too long.</p>
 <p>This is the Numpy array corresponding to the plot above:</p>
-<div class="cell" data-execution_count="18">
+<div class="cell" data-execution_count="19">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>signal <span class="op">=</span> griddedy[:, gy, gx]</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>signal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>signal <span class="op">=</span> griddedy[:, gy, gx]</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>signal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="18">
+<div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>array([        nan,         nan,         nan,         nan,         nan,
                nan,         nan,         nan,         nan,         nan,
                nan,         nan,         nan,         nan,         nan,
@@ -547,93 +623,93 @@ Tip
                nan,         nan,         nan,         nan,         nan,
                nan,         nan,         nan,         nan,         nan,
                nan,         nan,         nan,         nan,         nan,
-               nan,         nan, -0.3141667 , -1.4891667 , -1.1691667 ,
-       -1.17      ,  0.10916665, -1.9425001 , -0.9183333 , -0.52      ,
-       -0.4816667 ,  0.5216667 ,  0.40083337, -1.09      ,         nan,
-        1.0158335 ,  0.6791666 ,  1.6383333 ,  0.32500005, -0.05333332,
-               nan, -1.4816666 , -1.0191666 ,         nan, -1.1666666 ,
-        0.5425    , -0.16333331, -1.6008333 ,  0.13083331,  1.29      ,
-       -0.83666664, -0.3374999 ,  0.83083344,         nan,         nan,
-       -0.44333336,  0.6416666 , -0.09333333, -0.715     , -0.28833324,
-       -0.6225    ,  0.97749996, -0.12583338, -0.16166663,  0.34833336,
-        0.21833332, -0.405     , -0.26833335,  0.8408334 , -1.5741667 ,
-       -0.065     , -0.26250002,  1.5941668 ,  0.81333333,  0.40083334,
-        0.07666666,  2.3058333 ,  1.5224999 ,  0.71333337,  1.3391666 ,
-       -1.3108333 , -1.1324999 ,  0.37750006,  0.40166667,  1.5166665 ,
-        0.39000002,  0.23416667], dtype=float32)</code></pre>
+               nan,         nan, -0.325     , -1.5       , -1.1808333 ,
+       -1.1816666 ,  0.0975    , -1.9533334 , -0.9291666 , -0.53083336,
+       -0.49250007,  0.5108333 ,  0.39000002, -1.1016666 ,         nan,
+        1.0050001 ,  0.6675    ,  1.6266665 ,  0.31416667, -0.06500002,
+               nan, -1.4924998 , -1.03      ,         nan, -1.1783333 ,
+        0.5308334 , -0.175     , -1.6116667 ,  0.11999998,  1.2833333 ,
+       -0.84583336, -0.355     ,  0.8141667 ,         nan,         nan,
+       -0.44000006,  0.65250003, -0.07750002, -0.6775    , -0.26916668,
+       -0.5958332 ,  0.9916668 , -0.1091666 , -0.14083336,  0.36166668,
+        0.23416667, -0.40666673, -0.25416663,  0.8541667 , -1.5525001 ,
+       -0.04999999, -0.23916666,  1.6108333 ,  0.8275001 ,  0.41333333,
+        0.08916668,  2.3008335 ,  1.5166665 ,  0.705     ,  1.3366666 ,
+       -1.1916666 , -1.1216667 ,  0.39083338,  0.4141667 ,  1.5300001 ,
+        0.40250006,  0.22500002], dtype=float32)</code></pre>
 </div>
 </div>
 <p>Apart from the first 77 years, where there were no measurements whatsoever, there are only five missing measurements: three of those are single years, and the other two are consecutive years.</p>
 <p>We obviously cannot do anything about the first 77 years, but we can use linear interpolation to fill in the other five missing points. The function below, <code>bounds()</code>, returns the first and last indices of a Numpy array that contain the longest sequence of data points that can be used as base for the imputation.</p>
-<div class="cell" data-execution_count="19">
+<div class="cell" data-execution_count="20">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bounds(data, max_contiguous_na<span class="op">=</span><span class="dv">5</span>):</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Returns the start and end indices of the longest</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># valid sequence, that is, containing up to a given</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># number of contiguous missing points</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gets the indices of the non-null points</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    idxs <span class="op">=</span> np.arange(<span class="bu">len</span>(data))[<span class="op">~</span>np.isnan(data)]</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    max_size <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    max_ini <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    size <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    ini <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculates the size of the gaps of missing data</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    gaps <span class="op">=</span> np.diff(idxs) <span class="op">-</span> <span class="dv">1</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(gaps):</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If there's no gap, the size of valid data is increased by 1</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> v <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>            size <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If that's the long sequence of values containing tolerable </span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># gaps then updates max info</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> size <span class="op">&gt;</span> max_size:</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>            max_size <span class="op">=</span> size</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>            max_ini <span class="op">=</span> ini</span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If the gaps is larger than tolerable, resets size and init</span></span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> v <span class="op">&gt;</span> max_contiguous_na:</span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>            ini <span class="op">=</span> i <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>            size <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If the gap is tolerable, adds one to the size</span></span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># (that means the next idx)</span></span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> v <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>            size <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Computes the end of the longest sequence</span></span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    max_end <span class="op">=</span> max_ini <span class="op">+</span> max_size</span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Returns the start and end indices of the longest sequence</span></span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>    ini, end <span class="op">=</span> idxs[max_ini], idxs[max_end<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ini, end</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bounds(data, max_contiguous_na<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Returns the start and end indices of the longest</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># valid sequence, that is, containing up to a given</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># number of contiguous missing points</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gets the indices of the non-null points</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    idxs <span class="op">=</span> np.arange(<span class="bu">len</span>(data))[<span class="op">~</span>np.isnan(data)]</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    max_size <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    max_ini <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    size <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    ini <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculates the size of the gaps of missing data</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    gaps <span class="op">=</span> np.diff(idxs) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(gaps):</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If there's no gap, the size of valid data is increased by 1</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> v <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>            size <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If that's the long sequence of values containing tolerable </span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># gaps then updates max info</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> size <span class="op">&gt;</span> max_size:</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>            max_size <span class="op">=</span> size</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>            max_ini <span class="op">=</span> ini</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If the gaps is larger than tolerable, resets size and init</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> v <span class="op">&gt;</span> max_contiguous_na:</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>            ini <span class="op">=</span> i <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>            size <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If the gap is tolerable, adds one to the size</span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># (that means the next idx)</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> v <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>            size <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Computes the end of the longest sequence</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>    max_end <span class="op">=</span> max_ini <span class="op">+</span> max_size</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Returns the start and end indices of the longest sequence</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>    ini, end <span class="op">=</span> idxs[max_ini], idxs[max_end<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ini, end</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Let’s create three dummy arrays to illustrate how the function above works.</p>
-<div class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dummy1 <span class="op">=</span> np.ones(<span class="dv">15</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>dummy1[<span class="dv">2</span>:<span class="dv">5</span>] <span class="op">=</span> np.nan</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>dummy1, bounds(dummy1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="20">
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dummy1 <span class="op">=</span> np.ones(<span class="dv">15</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>dummy1[<span class="dv">2</span>:<span class="dv">5</span>] <span class="op">=</span> np.nan</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>dummy1, bounds(dummy1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
 <pre><code>(array([ 1.,  1., nan, nan, nan,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,
          1.,  1.]),
  (0, 15))</code></pre>
 </div>
 </div>
 <p>That was an easy case: there’s only a gap of three consecutive data points (thus below the default threshold of five), so we can use the whole sequence (start=0, end=15) and impute those three values.</p>
-<div class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dummy2 <span class="op">=</span> np.ones(<span class="dv">15</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>dummy2[<span class="dv">2</span>:<span class="dv">8</span>] <span class="op">=</span> np.nan</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>dummy2, bounds(dummy2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="21">
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dummy2 <span class="op">=</span> np.ones(<span class="dv">15</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>dummy2[<span class="dv">2</span>:<span class="dv">8</span>] <span class="op">=</span> np.nan</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>dummy2, bounds(dummy2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>(array([ 1.,  1., nan, nan, nan, nan, nan, nan,  1.,  1.,  1.,  1.,  1.,
          1.,  1.]),
  (8, 15))</code></pre>
 </div>
 </div>
 <p>The second sequence has six consecutive missing points, so they won’t be imputed, and we’ll only consider the sequence from its 9th data point (index=8).</p>
-<div class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>dummy3 <span class="op">=</span> np.ones(<span class="dv">15</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>dummy3[<span class="dv">2</span>:<span class="dv">5</span>] <span class="op">=</span> np.nan</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>dummy3[<span class="dv">8</span>:<span class="dv">14</span>] <span class="op">=</span> np.nan</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>dummy3, bounds(dummy3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="22">
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>dummy3 <span class="op">=</span> np.ones(<span class="dv">15</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>dummy3[<span class="dv">2</span>:<span class="dv">5</span>] <span class="op">=</span> np.nan</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>dummy3[<span class="dv">8</span>:<span class="dv">14</span>] <span class="op">=</span> np.nan</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>dummy3, bounds(dummy3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
 <pre><code>(array([ 1.,  1., nan, nan, nan,  1.,  1.,  1., nan, nan, nan, nan, nan,
         nan,  1.]),
  (0, 8))</code></pre>
@@ -641,135 +717,137 @@ Tip
 </div>
 <p>The third example is a bit more peculiar, since it has six consecutive missing points towards its end. Therefore, the longest sequence we can use actually ends at the 9th data point (index=8). This is a rather rare occurrence, since most grid boxes have missing data points in earlier years only.</p>
 <p>In our real example, we can use the sequence from 1957 up to 2021:</p>
-<div class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ini, end <span class="op">=</span> bounds(signal, max_contiguous_na<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>ini, end, signal[ini:end]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ini, end <span class="op">=</span> bounds(signal, max_contiguous_na<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>ini, end, signal[ini:end]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
 <pre><code>(77,
  142,
- array([-0.3141667 , -1.4891667 , -1.1691667 , -1.17      ,  0.10916665,
-        -1.9425001 , -0.9183333 , -0.52      , -0.4816667 ,  0.5216667 ,
-         0.40083337, -1.09      ,         nan,  1.0158335 ,  0.6791666 ,
-         1.6383333 ,  0.32500005, -0.05333332,         nan, -1.4816666 ,
-        -1.0191666 ,         nan, -1.1666666 ,  0.5425    , -0.16333331,
-        -1.6008333 ,  0.13083331,  1.29      , -0.83666664, -0.3374999 ,
-         0.83083344,         nan,         nan, -0.44333336,  0.6416666 ,
-        -0.09333333, -0.715     , -0.28833324, -0.6225    ,  0.97749996,
-        -0.12583338, -0.16166663,  0.34833336,  0.21833332, -0.405     ,
-        -0.26833335,  0.8408334 , -1.5741667 , -0.065     , -0.26250002,
-         1.5941668 ,  0.81333333,  0.40083334,  0.07666666,  2.3058333 ,
-         1.5224999 ,  0.71333337,  1.3391666 , -1.3108333 , -1.1324999 ,
-         0.37750006,  0.40166667,  1.5166665 ,  0.39000002,  0.23416667],
+ array([-0.325     , -1.5       , -1.1808333 , -1.1816666 ,  0.0975    ,
+        -1.9533334 , -0.9291666 , -0.53083336, -0.49250007,  0.5108333 ,
+         0.39000002, -1.1016666 ,         nan,  1.0050001 ,  0.6675    ,
+         1.6266665 ,  0.31416667, -0.06500002,         nan, -1.4924998 ,
+        -1.03      ,         nan, -1.1783333 ,  0.5308334 , -0.175     ,
+        -1.6116667 ,  0.11999998,  1.2833333 , -0.84583336, -0.355     ,
+         0.8141667 ,         nan,         nan, -0.44000006,  0.65250003,
+        -0.07750002, -0.6775    , -0.26916668, -0.5958332 ,  0.9916668 ,
+        -0.1091666 , -0.14083336,  0.36166668,  0.23416667, -0.40666673,
+        -0.25416663,  0.8541667 , -1.5525001 , -0.04999999, -0.23916666,
+         1.6108333 ,  0.8275001 ,  0.41333333,  0.08916668,  2.3008335 ,
+         1.5166665 ,  0.705     ,  1.3366666 , -1.1916666 , -1.1216667 ,
+         0.39083338,  0.4141667 ,  1.5300001 ,  0.40250006,  0.22500002],
        dtype=float32))</code></pre>
 </div>
 </div>
-<p>The function below, <code>fill_values()</code>, uses Scikit-Learn’s <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.interp1d.html"><code>interp1d()</code></a> to impute the missing values in the longest sequence identified by the <code>bounds()</code> function:</p>
-<div class="cell" data-execution_count="24">
+<p>The function below, <code>fill_values()</code>, uses Scikit-Learn’s <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.interp1d.html" target="_blank"><code>interp1d()</code></a> to impute the missing values in the longest sequence identified by the <code>bounds()</code> function:</p>
+<div class="cell" data-execution_count="25">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fill_values(data, </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                max_contiguous_na<span class="op">=</span><span class="dv">5</span>, </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                periods_for_extrapolation<span class="op">=</span><span class="dv">5</span>, </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                method<span class="op">=</span><span class="st">'slinear'</span>):</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    time <span class="op">=</span> np.arange(<span class="bu">len</span>(data))</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    signal <span class="op">=</span> data.copy()</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If there are no valid data points, there's nothing to fill</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.<span class="bu">all</span>(np.isnan(signal)):</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> signal</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> np.<span class="bu">any</span>(np.isnan(signal)):</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Gets minimum and maximum values</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>        minv, maxv <span class="op">=</span> np.nanmin(signal), np.nanmax(signal)</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Uses only the values in the longest sequence containing no more than</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># a given number of contiguous missing points (5)</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>        ini, end <span class="op">=</span> bounds(data, max_contiguous_na)</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>        signal <span class="op">=</span> signal[ini:end]</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Creates a filler function to interpolate the missing values over time</span></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>            filler_func <span class="op">=</span> interpolate.interp1d(time[ini:end][<span class="op">~</span>np.isnan(signal)], </span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>                                               signal[<span class="op">~</span>np.isnan(signal)], </span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>                                               kind<span class="op">=</span>method)</span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">ValueError</span>:</span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> signal</span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Passes the time as argument to the filler function</span></span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>        filled <span class="op">=</span> filler_func(time[ini:end])</span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Caps interpolated values at actually observed min and max values</span></span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>        filled <span class="op">=</span> np.minimum(filled, maxv)</span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>        filled <span class="op">=</span> np.maximum(filled, minv)</span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ini <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Rebuilds the full sized array, if the longest sequence </span></span>
-<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>            <span class="co"># doesn't start at zero</span></span>
-<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>            filled <span class="op">=</span> np.concatenate([[np.nan] <span class="op">*</span> ini, filled])</span>
-<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> end <span class="op">&lt;</span> <span class="bu">len</span>(data):</span>
-<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>            <span class="co"># If the longest sequence ends before the last time period, </span></span>
-<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>            <span class="co"># extrapolates the last missing values using the average of</span></span>
-<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>            <span class="co"># a given number of periods</span></span>
-<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>            avg <span class="op">=</span> filled[<span class="op">-</span>periods_for_extrapolation:].mean()</span>
-<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>            filled <span class="op">=</span> np.concatenate([filled, </span>
-<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>                                     np.nan_to_num(data[end:].copy(), nan<span class="op">=</span>avg)])</span>
-<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> filled</span>
-<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> signal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> interpolate</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fill_values(data, </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                max_contiguous_na<span class="op">=</span><span class="dv">5</span>, </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                periods_for_extrapolation<span class="op">=</span><span class="dv">5</span>, </span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                method<span class="op">=</span><span class="st">'slinear'</span>):</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    time <span class="op">=</span> np.arange(<span class="bu">len</span>(data))</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    signal <span class="op">=</span> data.copy()</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If there are no valid data points, there's nothing to fill</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.<span class="bu">all</span>(np.isnan(signal)):</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> signal</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> np.<span class="bu">any</span>(np.isnan(signal)):</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Gets minimum and maximum values</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>        minv, maxv <span class="op">=</span> np.nanmin(signal), np.nanmax(signal)</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Uses only the values in the longest sequence containing no more than</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># a given number of contiguous missing points (5)</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>        ini, end <span class="op">=</span> bounds(data, max_contiguous_na)</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>        signal <span class="op">=</span> signal[ini:end]</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Creates a filler function to interpolate the missing values over time</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>            filler_func <span class="op">=</span> interpolate.interp1d(time[ini:end][<span class="op">~</span>np.isnan(signal)], </span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>                                               signal[<span class="op">~</span>np.isnan(signal)], </span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>                                               kind<span class="op">=</span>method)</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">ValueError</span>:</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> signal</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Passes the time as argument to the filler function</span></span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>        filled <span class="op">=</span> filler_func(time[ini:end])</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Caps interpolated values at actually observed min and max values</span></span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>        filled <span class="op">=</span> np.minimum(filled, maxv)</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>        filled <span class="op">=</span> np.maximum(filled, minv)</span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ini <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Rebuilds the full sized array, if the longest sequence </span></span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>            <span class="co"># doesn't start at zero</span></span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>            filled <span class="op">=</span> np.concatenate([[np.nan] <span class="op">*</span> ini, filled])</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> end <span class="op">&lt;</span> <span class="bu">len</span>(data):</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>            <span class="co"># If the longest sequence ends before the last time period, </span></span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>            <span class="co"># extrapolates the last missing values using the average of</span></span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>            <span class="co"># a given number of periods</span></span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>            avg <span class="op">=</span> filled[<span class="op">-</span>periods_for_extrapolation:].mean()</span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>            filled <span class="op">=</span> np.concatenate([filled, </span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>                                     np.nan_to_num(data[end:].copy(), nan<span class="op">=</span>avg)])</span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> filled</span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> signal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>We can apply the <code>fill_values()</code> function to our real example:</p>
-<div class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fill_values(signal[ini:end])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="25">
-<pre><code>array([-0.31416669, -1.48916674, -1.16916668, -1.16999996,  0.10916665,
-       -1.94250011, -0.91833329, -0.51999998, -0.48166671,  0.52166671,
-        0.40083337, -1.09000003, -0.03708327,  1.0158335 ,  0.67916662,
-        1.63833332,  0.32500005, -0.05333332, -0.76749994, -1.48166656,
-       -1.01916659, -1.09291661, -1.16666663,  0.54250002, -0.16333331,
-       -1.6008333 ,  0.13083331,  1.28999996, -0.83666664, -0.33749989,
-        0.83083344,  0.40611117, -0.01861109, -0.44333336,  0.64166659,
-       -0.09333333, -0.71499997, -0.28833324, -0.6225    ,  0.97749996,
-       -0.12583338, -0.16166663,  0.34833336,  0.21833332, -0.405     ,
-       -0.26833335,  0.84083343, -1.57416666, -0.065     , -0.26250002,
-        1.59416676,  0.81333333,  0.40083334,  0.07666666,  2.30583334,
-        1.52249992,  0.71333337,  1.33916664, -1.31083333, -1.13249993,
-        0.37750006,  0.40166667,  1.51666653,  0.39000002,  0.23416667])</code></pre>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fill_values(signal[ini:end])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<pre><code>array([-0.32499999, -1.5       , -1.18083334, -1.18166661,  0.0975    ,
+       -1.95333338, -0.92916662, -0.53083336, -0.49250007,  0.51083332,
+        0.39000002, -1.10166657, -0.04833323,  1.00500011,  0.66750002,
+        1.62666655,  0.31416667, -0.06500002, -0.77874992, -1.49249983,
+       -1.02999997, -1.10416663, -1.17833328,  0.53083342, -0.175     ,
+       -1.61166668,  0.11999998,  1.2833333 , -0.84583336, -0.35499999,
+        0.81416672,  0.39611113, -0.02194446, -0.44000006,  0.65250003,
+       -0.07750002, -0.67750001, -0.26916668, -0.59583318,  0.99166679,
+       -0.1091666 , -0.14083336,  0.36166668,  0.23416667, -0.40666673,
+       -0.25416663,  0.85416669, -1.55250013, -0.04999999, -0.23916666,
+        1.61083329,  0.8275001 ,  0.41333333,  0.08916668,  2.30083346,
+        1.51666653,  0.70499998,  1.33666658, -1.1916666 , -1.12166667,
+        0.39083338,  0.41416669,  1.53000009,  0.40250006,  0.22500002])</code></pre>
 </div>
 </div>
 <p>Moreover, we can create yet another function, <code>fill_series()</code> to apply the <code>fill_values()</code> function to the time series of each and every grid box.</p>
-<div class="cell" data-execution_count="26">
+<div class="cell" data-execution_count="27">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fill_series(gridded, </span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                max_contiguous_na<span class="op">=</span><span class="dv">3</span>, </span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                periods_for_extrapolation<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                method<span class="op">=</span><span class="st">'slinear'</span>):</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Applies the fill_values function over every grid box</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    filled <span class="op">=</span> np.apply_along_axis(func1d<span class="op">=</span><span class="kw">lambda</span> s: fill_values(s, </span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                                                              max_contiguous_na, </span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                                                              periods_for_extrapolation, </span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                                                              method),</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>                                 arr<span class="op">=</span>gridded.reshape(gridded.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>).T,</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>                                 axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    filled <span class="op">=</span> filled.T.reshape(gridded.shape)</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> filled</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fill_series(gridded, </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>                max_contiguous_na<span class="op">=</span><span class="dv">3</span>, </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                periods_for_extrapolation<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                method<span class="op">=</span><span class="st">'slinear'</span>):</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Applies the fill_values function over every grid box</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    filled <span class="op">=</span> np.apply_along_axis(func1d<span class="op">=</span><span class="kw">lambda</span> s: fill_values(s, </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                                                              max_contiguous_na, </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>                                                              periods_for_extrapolation, </span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>                                                              method),</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>                                 arr<span class="op">=</span>gridded.reshape(gridded.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>).T,</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>                                 axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    filled <span class="op">=</span> filled.T.reshape(gridded.shape)</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> filled</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>filled <span class="op">=</span> fill_series(griddedy)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>filled.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="27">
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>filled <span class="op">=</span> fill_series(griddedy)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>filled.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
 <pre><code>(142, 36, 72)</code></pre>
 </div>
 </div>
 <p>The variable <code>filled</code> has the same shape as the gridded data, and it contains imputed values for <em>some</em> of the missing points.</p>
 <p>Let’s visualize our real example, the grid box close to Antarctica:</p>
-<div class="cell" data-execution_count="28">
+<div class="cell" data-execution_count="29">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>gy, gx <span class="op">=</span> <span class="dv">33</span>, <span class="dv">69</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_evolution(griddedy, gy, gx, filled<span class="op">=</span>filled)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>gy, gx <span class="op">=</span> <span class="dv">33</span>, <span class="dv">69</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_evolution(griddedy, gy, gx, filled<span class="op">=</span>filled)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-execution_count="29">
-<div class="cell-output cell-output-display" data-execution_count="29">
-<p><img src="absolute_files/figure-html/cell-29-output-1.png" class="img-fluid"></p>
+<div class="cell" data-execution_count="30">
+<div class="cell-output cell-output-display" data-execution_count="30">
+<p><img src="absolute_files/figure-html/cell-31-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Excellent, there are no missing points in this time series anymore.</p>
@@ -777,73 +855,77 @@ Tip
 </section>
 <section id="change-point-detection-cpd" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Change Point Detection (CPD)</h1>
-<p>We’re using the <a href="https://centre-borelli.github.io/ruptures-docs/">ruptures</a> package to detect change points in the series of temperature anomalies corresponding to each grid box.</p>
-<p>The <code>change_points()</code> function detects change points using linearly penalized segmentation (<a href="https://centre-borelli.github.io/ruptures-docs/user-guide/detection/pelt/">Pelt</a>), having <code>l1</code> as the model, and a penalty of three.</p>
-<div class="cell" data-execution_count="30">
+<p>We’re using the <a href="https://centre-borelli.github.io/ruptures-docs/" target="_blank">ruptures</a> package to detect change points in the series of temperature anomalies corresponding to each grid box.</p>
+<p>The <code>change_points()</code> function detects change points using linearly penalized segmentation (<a href="https://centre-borelli.github.io/ruptures-docs/user-guide/detection/pelt/" target="_blank">Pelt</a>), having <code>l1</code> as the model, and a penalty of three.</p>
+<div class="cell" data-execution_count="31">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> change_points(data, model<span class="op">=</span><span class="st">'l1'</span>, pen<span class="op">=</span><span class="dv">3</span>):</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    signal <span class="op">=</span> data.copy()</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If there are no valid data points, returns one regime</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># that starts at 0, ends at the full length, and is nan</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.<span class="bu">all</span>(np.isnan(signal)):</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array([<span class="dv">0</span>, <span class="bu">len</span>(signal)]), np.array([np.nan])</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gets the index of the first non-missing data</span></span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    ini <span class="op">=</span> np.argmax(<span class="op">~</span>np.isnan(signal))</span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Uses the Pelt method of the ruptures package</span></span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to find regime changes/breaks</span></span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    algo <span class="op">=</span> rpt.Pelt(model<span class="op">=</span>model).fit(signal[ini:])</span>
-<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
-<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>        breaks <span class="op">=</span> algo.predict(pen<span class="op">=</span>pen)</span>
-<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> BadSegmentationParameters:</span>
-<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If no changes/breaks were found, assumes</span></span>
-<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># the regime goes up to the end of the series</span></span>
-<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>        breaks <span class="op">=</span> [<span class="bu">len</span>(signal)<span class="op">-</span>ini]</span>
-<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gets the indices of the breaks and </span></span>
-<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>    breaks <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="op">*</span>breaks]) <span class="op">+</span> ini</span>
-<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Computes the average of each regime</span></span>
-<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>    averages <span class="op">=</span> np.array([signal[breaks[i<span class="op">-</span><span class="dv">1</span>]:breaks[i]].mean() </span>
-<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>                         <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(breaks))])</span>
-<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># First regime must be at least 10 years long</span></span>
-<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> np.argmax(np.diff(breaks) <span class="op">&gt;=</span> <span class="dv">10</span>)</span>
-<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> breaks[i:], averages[i:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install ruptures</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ruptures <span class="im">as</span> rpt</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ruptures.exceptions <span class="im">import</span> BadSegmentationParameters</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> change_points(data, model<span class="op">=</span><span class="st">'l1'</span>, pen<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    signal <span class="op">=</span> data.copy()</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If there are no valid data points, returns one regime</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># that starts at 0, ends at the full length, and is nan</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.<span class="bu">all</span>(np.isnan(signal)):</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array([<span class="dv">0</span>, <span class="bu">len</span>(signal)]), np.array([np.nan])</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gets the index of the first non-missing data</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    ini <span class="op">=</span> np.argmax(<span class="op">~</span>np.isnan(signal))</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Uses the Pelt method of the ruptures package</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to find regime changes/breaks</span></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    algo <span class="op">=</span> rpt.Pelt(model<span class="op">=</span>model).fit(signal[ini:])</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>        breaks <span class="op">=</span> algo.predict(pen<span class="op">=</span>pen)</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> BadSegmentationParameters:</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If no changes/breaks were found, assumes</span></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># the regime goes up to the end of the series</span></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>        breaks <span class="op">=</span> [<span class="bu">len</span>(signal)<span class="op">-</span>ini]</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gets the indices of the breaks and </span></span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>    breaks <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="op">*</span>breaks]) <span class="op">+</span> ini</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Computes the average of each regime</span></span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>    averages <span class="op">=</span> np.array([signal[breaks[i<span class="op">-</span><span class="dv">1</span>]:breaks[i]].mean() </span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>                         <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(breaks))])</span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># First regime must be at least 10 years long</span></span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> np.argmax(np.diff(breaks) <span class="op">&gt;=</span> <span class="dv">10</span>)</span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> breaks[i:], averages[i:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>For our real example, we feed the filled time series for the <code>change_points()</code> function, and that’s the result:</p>
-<div class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>change_points(filled[:, gy, gx])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="31">
-<pre><code>(array([ 77, 127, 142]), array([-0.23556663,  0.6161668 ], dtype=float32))</code></pre>
+<div class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>change_points(filled[:, gy, gx])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<pre><code>(array([ 77, 127, 142]), array([-0.23727499,  0.6299445 ], dtype=float32))</code></pre>
 </div>
 </div>
 <p>It identified one change point,happening in 2007 (index 127). From the start of the series, in 1957 (index 77), up until 2007, the average temperature anomaly was -0.236 degrees. From 2008 on, the new regime has an average temperature anomaly of 0.616 degrees.</p>
 <p>We can use this information to construct a time series representing these regimes, and that’s what the function below, <code>change_evolution()</code>, does:</p>
-<div class="cell" data-execution_count="32">
+<div class="cell" data-execution_count="33">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> change_evolution(changes, offset<span class="op">=</span><span class="va">True</span>):</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    breaks, averages <span class="op">=</span> changes</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Creates a full series using the break points and using the average</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># of each regime</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    avg_series <span class="op">=</span> np.concatenate([[averages[i]] <span class="op">*</span> (breaks[i <span class="op">+</span> <span class="dv">1</span>] <span class="op">-</span> breaks[i]) </span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>                                 <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(averages))])</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If offset, shifts the starting point to zero</span></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> offset:</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>        avg_series <span class="op">-=</span> avg_series[<span class="dv">0</span>]</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If the first break is other than zero, concatenates empty data at </span></span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the start to make the array full size</span></span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> breaks[<span class="dv">0</span>] <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>        avg_series <span class="op">=</span> np.concatenate([[np.nan] <span class="op">*</span> breaks[<span class="dv">0</span>], avg_series])</span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> avg_series</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> change_evolution(changes, offset<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    breaks, averages <span class="op">=</span> changes</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Creates a full series using the break points and using the average</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># of each regime</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    avg_series <span class="op">=</span> np.concatenate([[averages[i]] <span class="op">*</span> (breaks[i <span class="op">+</span> <span class="dv">1</span>] <span class="op">-</span> breaks[i]) </span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                                 <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(averages))])</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If offset, shifts the starting point to zero</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> offset:</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>        avg_series <span class="op">-=</span> avg_series[<span class="dv">0</span>]</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If the first break is other than zero, concatenates empty data at </span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the start to make the array full size</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> breaks[<span class="dv">0</span>] <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>        avg_series <span class="op">=</span> np.concatenate([[np.nan] <span class="op">*</span> breaks[<span class="dv">0</span>], avg_series])</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> avg_series</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>change_evolution(change_points(filled[:, gy, gx]), offset<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="33">
+<div class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>change_evolution(change_points(filled[:, gy, gx]), offset<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
 <pre><code>array([        nan,         nan,         nan,         nan,         nan,
                nan,         nan,         nan,         nan,         nan,
                nan,         nan,         nan,         nan,         nan,
@@ -859,26 +941,26 @@ Tip
                nan,         nan,         nan,         nan,         nan,
                nan,         nan,         nan,         nan,         nan,
                nan,         nan,         nan,         nan,         nan,
-               nan,         nan, -0.23556663, -0.23556663, -0.23556663,
-       -0.23556663, -0.23556663, -0.23556663, -0.23556663, -0.23556663,
-       -0.23556663, -0.23556663, -0.23556663, -0.23556663, -0.23556663,
-       -0.23556663, -0.23556663, -0.23556663, -0.23556663, -0.23556663,
-       -0.23556663, -0.23556663, -0.23556663, -0.23556663, -0.23556663,
-       -0.23556663, -0.23556663, -0.23556663, -0.23556663, -0.23556663,
-       -0.23556663, -0.23556663, -0.23556663, -0.23556663, -0.23556663,
-       -0.23556663, -0.23556663, -0.23556663, -0.23556663, -0.23556663,
-       -0.23556663, -0.23556663, -0.23556663, -0.23556663, -0.23556663,
-       -0.23556663, -0.23556663, -0.23556663, -0.23556663, -0.23556663,
-       -0.23556663, -0.23556663,  0.61616677,  0.61616677,  0.61616677,
-        0.61616677,  0.61616677,  0.61616677,  0.61616677,  0.61616677,
-        0.61616677,  0.61616677,  0.61616677,  0.61616677,  0.61616677,
-        0.61616677,  0.61616677])</code></pre>
+               nan,         nan, -0.23727499, -0.23727499, -0.23727499,
+       -0.23727499, -0.23727499, -0.23727499, -0.23727499, -0.23727499,
+       -0.23727499, -0.23727499, -0.23727499, -0.23727499, -0.23727499,
+       -0.23727499, -0.23727499, -0.23727499, -0.23727499, -0.23727499,
+       -0.23727499, -0.23727499, -0.23727499, -0.23727499, -0.23727499,
+       -0.23727499, -0.23727499, -0.23727499, -0.23727499, -0.23727499,
+       -0.23727499, -0.23727499, -0.23727499, -0.23727499, -0.23727499,
+       -0.23727499, -0.23727499, -0.23727499, -0.23727499, -0.23727499,
+       -0.23727499, -0.23727499, -0.23727499, -0.23727499, -0.23727499,
+       -0.23727499, -0.23727499, -0.23727499, -0.23727499, -0.23727499,
+       -0.23727499, -0.23727499,  0.6299445 ,  0.6299445 ,  0.6299445 ,
+        0.6299445 ,  0.6299445 ,  0.6299445 ,  0.6299445 ,  0.6299445 ,
+        0.6299445 ,  0.6299445 ,  0.6299445 ,  0.6299445 ,  0.6299445 ,
+        0.6299445 ,  0.6299445 ])</code></pre>
 </div>
 </div>
 <p>We can also set the <code>offset</code> argument to <code>True</code> to consider the <strong>first regime as the baseline</strong>, thus computing temperatures with respect to its average instead:</p>
-<div class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>change_evolution(change_points(filled[:, gy, gx]), offset<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="34">
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>change_evolution(change_points(filled[:, gy, gx]), offset<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
 <pre><code>array([       nan,        nan,        nan,        nan,        nan,
               nan,        nan,        nan,        nan,        nan,
               nan,        nan,        nan,        nan,        nan,
@@ -904,10 +986,10 @@ Tip
        0.        , 0.        , 0.        , 0.        , 0.        ,
        0.        , 0.        , 0.        , 0.        , 0.        ,
        0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.        , 0.85173339, 0.85173339, 0.85173339,
-       0.85173339, 0.85173339, 0.85173339, 0.85173339, 0.85173339,
-       0.85173339, 0.85173339, 0.85173339, 0.85173339, 0.85173339,
-       0.85173339, 0.85173339])</code></pre>
+       0.        , 0.        , 0.86721951, 0.86721951, 0.86721951,
+       0.86721951, 0.86721951, 0.86721951, 0.86721951, 0.86721951,
+       0.86721951, 0.86721951, 0.86721951, 0.86721951, 0.86721951,
+       0.86721951, 0.86721951])</code></pre>
 </div>
 </div>
 <p>In the example above, the second regime exhibits a temperature 0.85 degrees higher than the first, baseline, regime. We’ll use this approach to compute the <strong>absolute change in temperature</strong> with respect to the first observed regime (in the example above, the regime between 1957 and 2007).</p>
@@ -916,120 +998,120 @@ Tip
 <p>If that were the case, it means that the actual change may have be even higher. Conversely, if that unobserved regime had a higher temperature, the actual change would be lower than our estimation. Given that the latter case is rarely observed in practice, it’s rather safe to assume the overall estimation of the absolute change in temperature is actually a lower bound.</p>
 </div>
 <p>Next, we can create two other functions, <code>series_changes()</code> and <code>series_evolution()</code>, to apply the <code>change_points()</code> and <code>change_evolution()</code> functions, respectively, to the time series of each and every grid box.</p>
-<div class="cell" data-execution_count="35">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> series_changes(filled, model<span class="op">=</span><span class="st">'l1'</span>, pen<span class="op">=</span><span class="dv">3</span>):</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Applies the change_points function over every filled series</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    changes <span class="op">=</span> np.apply_along_axis(func1d<span class="op">=</span><span class="kw">lambda</span> s: change_points(s, model, pen),</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                                  arr<span class="op">=</span>filled.reshape(filled.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>).T,</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                                  axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    changes <span class="op">=</span> changes.reshape(<span class="op">*</span>filled.shape[<span class="dv">1</span>:], <span class="dv">2</span>)</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> changes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
 <div class="cell" data-execution_count="36">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> series_evolution(gridded, changes, offset<span class="op">=</span><span class="va">True</span>, keep_missing<span class="op">=</span><span class="va">True</span>):</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Applies the change_evolution function over every grid box</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    missing <span class="op">=</span> np.isnan(gridded.reshape(gridded.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>).T)</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    evolution <span class="op">=</span> np.apply_along_axis(func1d<span class="op">=</span><span class="kw">lambda</span> s: change_evolution(s, offset),</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                                    arr<span class="op">=</span>changes.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>                                    axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> keep_missing:</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>        evolution[missing] <span class="op">=</span> np.nan</span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    evolution <span class="op">=</span> evolution.T.reshape(gridded.shape)</span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> evolution</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> series_changes(filled, model<span class="op">=</span><span class="st">'l1'</span>, pen<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Applies the change_points function over every filled series</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    changes <span class="op">=</span> np.apply_along_axis(func1d<span class="op">=</span><span class="kw">lambda</span> s: change_points(s, model, pen),</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                                  arr<span class="op">=</span>filled.reshape(filled.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>).T,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                                  axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    changes <span class="op">=</span> changes.reshape(<span class="op">*</span>filled.shape[<span class="dv">1</span>:], <span class="dv">2</span>)</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> changes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="37">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="st">'l1'</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>pen <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>changes <span class="op">=</span> series_changes(filled, model<span class="op">=</span>model, pen<span class="op">=</span>pen)</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>regimes <span class="op">=</span> series_evolution(griddedy, changes, keep_missing<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>regimes.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="37">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> series_evolution(gridded, changes, offset<span class="op">=</span><span class="va">True</span>, keep_missing<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Applies the change_evolution function over every grid box</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    missing <span class="op">=</span> np.isnan(gridded.reshape(gridded.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>).T)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    evolution <span class="op">=</span> np.apply_along_axis(func1d<span class="op">=</span><span class="kw">lambda</span> s: change_evolution(s, offset),</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>                                    arr<span class="op">=</span>changes.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>                                    axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> keep_missing:</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>        evolution[missing] <span class="op">=</span> np.nan</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>    evolution <span class="op">=</span> evolution.T.reshape(gridded.shape)</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> evolution</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="st">'l1'</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>pen <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>changes <span class="op">=</span> series_changes(filled, model<span class="op">=</span>model, pen<span class="op">=</span>pen)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>regimes <span class="op">=</span> series_evolution(griddedy, changes, keep_missing<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>regimes.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="38">
 <pre><code>(142, 36, 72)</code></pre>
 </div>
 </div>
 <p>As expected, the <code>regimes</code> variable has the same shape as both <code>filled</code> and <code>griddedy</code>, representing one time series for each grid box.</p>
 <p>Let’s visualize the regimes for our grid box close to Antarctica:</p>
-<div class="cell" data-execution_count="38">
+<div class="cell" data-execution_count="39">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>gy, gx <span class="op">=</span> <span class="dv">33</span>, <span class="dv">69</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_evolution(griddedy, gy, gx, </span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>                     filled<span class="op">=</span>filled, changes<span class="op">=</span>changes, regime<span class="op">=</span>regimes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>gy, gx <span class="op">=</span> <span class="dv">33</span>, <span class="dv">69</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_evolution(griddedy, gy, gx, </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                     filled<span class="op">=</span>filled, changes<span class="op">=</span>changes, regime<span class="op">=</span>regimes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-execution_count="39">
-<div class="cell-output cell-output-display" data-execution_count="39">
-<p><img src="absolute_files/figure-html/cell-39-output-1.png" class="img-fluid"></p>
+<div class="cell" data-execution_count="40">
+<div class="cell-output cell-output-display" data-execution_count="40">
+<p><img src="absolute_files/figure-html/cell-41-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
 <section id="absolute-changes-in-temperature" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> Absolute Changes in Temperature</h1>
 <p>Since we have time series of the estimated regimes, we can use them to compute a global average of the absolute change in temperature weighted by the surface area of each grid box.</p>
-<div class="cell" data-execution_count="40">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>avg_temp_regimes <span class="op">=</span> surface_stat(regimes, surface_perc)</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>avg_temp_regimes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="40">
+<div class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>avg_temp_regimes <span class="op">=</span> surface_stat(regimes, surface_perc)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>avg_temp_regimes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="41">
 <pre><code>array([0.        , 0.        , 0.        , 0.        , 0.        ,
        0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.00576335, 0.00580329, 0.00707719, 0.00694469, 0.00672578,
-       0.01834079, 0.02212073, 0.02420542, 0.02469429, 0.02571803,
-       0.02925433, 0.02838276, 0.02776722, 0.02960892, 0.02895156,
-       0.02864731, 0.02761619, 0.02568091, 0.02537386, 0.02314328,
-       0.02520285, 0.02881464, 0.03121997, 0.03067486, 0.03366899,
-       0.04119744, 0.04603328, 0.0462651 , 0.0511927 , 0.05288778,
-       0.06770082, 0.06838848, 0.07115542, 0.07475784, 0.07688982,
-       0.09671996, 0.10174075, 0.10285812, 0.10276389, 0.10513163,
-       0.13238765, 0.13284342, 0.13526591, 0.13752306, 0.14154711,
-       0.16200084, 0.16699853, 0.17127526, 0.18274286, 0.19690109,
-       0.22714448, 0.22896972, 0.23010422, 0.24669774, 0.23283419,
-       0.24106541, 0.24799387, 0.21955436, 0.21295449, 0.20745591,
-       0.20640894, 0.20799534, 0.20507451, 0.20498372, 0.20576691,
-       0.20651061, 0.20562891, 0.20712536, 0.20695692, 0.20878697,
-       0.21100393, 0.21289192, 0.21458437, 0.21573853, 0.21344726,
-       0.21931271, 0.22112944, 0.22111773, 0.2225343 , 0.22586358,
-       0.24031732, 0.24258621, 0.25459703, 0.2577666 , 0.2645934 ,
-       0.28262642, 0.30619518, 0.33423281, 0.34660399, 0.34488311,
-       0.39779741, 0.40840923, 0.4162796 , 0.42082517, 0.42332179,
-       0.4440393 , 0.45619066, 0.46173487, 0.46749258, 0.47442235,
-       0.49173493, 0.49636275, 0.50507246, 0.51133605, 0.52102668,
-       0.61102596, 0.63321358, 0.65210243, 0.67432724, 0.68344587,
-       0.755153  , 0.75700098, 0.77379877, 0.78516061, 0.78950154,
-       0.79942277, 0.80310933, 0.8069333 , 0.8086264 , 0.81033482,
-       0.8229554 , 0.8297085 , 0.8308874 , 0.83842405, 0.84456048,
-       0.86581081, 0.8699356 , 0.87017374, 0.87180792, 0.8736366 ,
-       0.87485245, 0.8718763 ])</code></pre>
+       0.00863404, 0.00869392, 0.0095288 , 0.00935041, 0.00905566,
+       0.02286673, 0.02684635, 0.0284382 , 0.02915019, 0.03008991,
+       0.03348921, 0.03161973, 0.03078799, 0.03283298, 0.03250496,
+       0.03158139, 0.03060249, 0.02906777, 0.02820625, 0.02559448,
+       0.02694036, 0.0305054 , 0.03330137, 0.03123806, 0.03423738,
+       0.04043984, 0.0452272 , 0.0449563 , 0.04931425, 0.05106176,
+       0.06527432, 0.06554802, 0.06675241, 0.07094976, 0.07198512,
+       0.09538307, 0.101054  , 0.10183483, 0.10148122, 0.10393017,
+       0.13250359, 0.13293051, 0.13482252, 0.13729236, 0.14118601,
+       0.16000189, 0.16481473, 0.16978522, 0.18086563, 0.19344881,
+       0.22351007, 0.22546735, 0.22649203, 0.24322801, 0.22974729,
+       0.23892152, 0.24470963, 0.21670845, 0.2101918 , 0.20486365,
+       0.20398545, 0.20527823, 0.20239556, 0.20231018, 0.20308164,
+       0.20456688, 0.20370002, 0.20492318, 0.20478634, 0.20686934,
+       0.20981335, 0.21204866, 0.2143356 , 0.21572274, 0.21344339,
+       0.22046692, 0.22191109, 0.22190933, 0.22331023, 0.22627528,
+       0.24055303, 0.24281383, 0.25411658, 0.25712333, 0.26394951,
+       0.28275697, 0.30668972, 0.3361069 , 0.34702378, 0.34697437,
+       0.3974189 , 0.40681937, 0.41492703, 0.41930001, 0.42136172,
+       0.43838807, 0.45004648, 0.45576061, 0.4615243 , 0.46840125,
+       0.48751201, 0.49167552, 0.49976581, 0.50548547, 0.51417622,
+       0.60791707, 0.63340009, 0.65052288, 0.67185301, 0.68097021,
+       0.75407967, 0.7549419 , 0.77265617, 0.78323735, 0.78799404,
+       0.79857896, 0.80244634, 0.80621087, 0.80784861, 0.80927644,
+       0.82207938, 0.82834137, 0.82949779, 0.83665699, 0.84323745,
+       0.86435729, 0.86854999, 0.86850925, 0.87068298, 0.87258656,
+       0.87397385, 0.87079911])</code></pre>
 </div>
 </div>
 <p>It was only in the 11th year of the series (1890), that there was a regime change somewhere in the globe. Let’s visualize the data in a plot:</p>
-<div class="cell" data-execution_count="41">
+<div class="cell" data-execution_count="42">
 <div class="cell-output cell-output-display">
-<p><img src="absolute_files/figure-html/cell-41-output-1.png" class="img-fluid"></p>
+<p><img src="absolute_files/figure-html/cell-43-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>The change in temperature in the 90s is particularly striking!</p>
 <p>Finally, let’s take a look at these absolute changes in temperature across the globe in 2021:</p>
-<div class="cell" data-execution_count="42">
+<div class="cell" data-execution_count="43">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>year_ini <span class="op">=</span> <span class="dv">2021</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>year_end <span class="op">=</span> <span class="dv">2021</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_projection(regimes[year_ini<span class="op">-</span><span class="dv">1880</span>:year_end<span class="op">-</span><span class="dv">1880</span><span class="op">+</span><span class="dv">1</span>], </span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                      seq_offset<span class="op">=</span>year_ini, </span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>                      add_line<span class="op">=</span><span class="va">True</span>, animate<span class="op">=</span><span class="va">True</span>, </span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>                      colorscale<span class="op">=</span><span class="st">'Jet'</span>, colorbar_title<span class="op">=</span><span class="st">'oC'</span>, </span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>                      zmin<span class="op">=-</span><span class="dv">4</span>, zmax<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>year_ini <span class="op">=</span> <span class="dv">2021</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>year_end <span class="op">=</span> <span class="dv">2021</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_projection(regimes[year_ini<span class="op">-</span><span class="dv">1880</span>:year_end<span class="op">-</span><span class="dv">1880</span><span class="op">+</span><span class="dv">1</span>], </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                      seq_offset<span class="op">=</span>year_ini, </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                      add_line<span class="op">=</span><span class="va">True</span>, animate<span class="op">=</span><span class="va">True</span>, </span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>                      colorscale<span class="op">=</span><span class="st">'Jet'</span>, colorbar_title<span class="op">=</span><span class="st">'oC'</span>, </span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>                      zmin<span class="op">=-</span><span class="dv">4</span>, zmax<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-execution_count="43">
-<div class="cell-output cell-output-display" data-execution_count="43">
-<p><img src="absolute_files/figure-html/cell-43-output-1.png" class="img-fluid"></p>
+<div class="cell" data-execution_count="44">
+<div class="cell-output cell-output-display" data-execution_count="44">
+<p><img src="absolute_files/figure-html/cell-45-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Many regions in the northern hemisphere show regimes that are <strong>3 degrees Celsius or more</strong> above their corresponding (observed) first regime since 1880.</p>
@@ -1047,41 +1129,111 @@ Tip
 <p>While exploring the interactive plot, pay attention to how some areas heat up earlier than others, and how warmer regions spread over time.</p>
 </div>
 </div>
+<p>Did you notice that the landmasses are getting warmer than the oceans? Let’s dig deeper into it!</p>
 </section>
-<section id="saving-to-file" class="level1" data-number="9">
-<h1 data-number="9"><span class="header-section-number">9</span> Saving to File</h1>
-<p>The interactive plot in the main page uses two <code>.dat</code> files (<code>zvalues</code> and <code>evolution</code>) containing the raw data from NOAA, the estimated regimes we discussed above, and the imputed data points.</p>
-<p>The code below generates these two files.</p>
-<div class="cell" data-execution_count="44">
+<section id="over-land-and-sea" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Over Land and Sea</h1>
+<p>First, we need to define a mask for our grid cells, a Numpy array indicating those grid cells which have more than 50% of its area as landmass (one indicates land, zero indicates sea). I’ve prepared this array and saved it in the <code>land.npy</code> file.</p>
+<div class="cell" data-execution_count="64">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filled series -&gt; array</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>n_years <span class="op">=</span> griddedy.shape[<span class="dv">0</span>]</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>filled_locs, filled_years <span class="op">=</span> np.where(np.isnan(griddedy.reshape(n_years, <span class="op">-</span><span class="dv">1</span>).T) </span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="op">&amp;</span> <span class="op">~</span>np.isnan(filled.reshape(n_years, <span class="op">-</span><span class="dv">1</span>).T))</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>filled_vals <span class="op">=</span> filled.reshape(n_years, <span class="op">-</span><span class="dv">1</span>).T[filled_locs, filled_years]</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>filled_arrays <span class="op">=</span> np.array([filled_locs, filled_years, filled_vals])</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="co"># changes -&gt; array</span></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>idxs_breaks <span class="op">=</span> np.cumsum(<span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">len</span>, changes[:, :, <span class="dv">0</span>].reshape(<span class="op">-</span><span class="dv">1</span>))))</span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>vals_breaks <span class="op">=</span> np.array([v <span class="cf">for</span> s <span class="kw">in</span> changes[:, :, <span class="dv">0</span>].reshape(<span class="op">-</span><span class="dv">1</span>, ) </span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">for</span> v <span class="kw">in</span> s])</span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>vals_avgs <span class="op">=</span> np.array([v <span class="cf">for</span> s <span class="kw">in</span> changes[:, :, <span class="dv">1</span>].reshape(<span class="op">-</span><span class="dv">1</span>, ) </span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>                      <span class="cf">for</span> v <span class="kw">in</span> np.concatenate([[np.nan], s])])</span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>chg_arrays <span class="op">=</span> np.zeros(shape<span class="op">=</span>(<span class="dv">3</span>, vals_breaks.shape[<span class="dv">0</span>])) <span class="op">*</span> np.nan</span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>chg_arrays[<span class="dv">0</span>, :idxs_breaks.shape[<span class="dv">0</span>]] <span class="op">=</span> idxs_breaks</span>
-<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>chg_arrays[<span class="dv">1</span>] <span class="op">=</span> vals_breaks</span>
-<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>chg_arrays[<span class="dv">2</span>] <span class="op">=</span> vals_avgs</span>
-<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>save2dat([griddedy, regimes], <span class="st">'zvalues'</span>, swap<span class="op">=</span><span class="va">False</span>, nan<span class="op">=-</span><span class="dv">999</span>)</span>
-<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>save2dat([filled_arrays, chg_arrays], <span class="st">'evolution'</span>, swap<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(<span class="st">'https://heatingplanet.org/assets/data/land.npy'</span>)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>response.raise_for_status()</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>land_mask <span class="op">=</span> np.load(io.BytesIO(response.content))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-
-
+<section id="anomalies" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="anomalies"><span class="header-section-number">9.1</span> Anomalies</h2>
+<p>Now we can make deep copies of the anomalies (<code>griddedy</code>) and use the land_mask variable to mask either landmasses or oceans. This allows us to compute the average global anomalies over land and sea, separately, using the <code>surface_stat</code> function once again. Let’s see what are the current figures for 2021:</p>
+<div class="cell" data-execution_count="66">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> copy <span class="im">import</span> deepcopy</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>griddedy_land <span class="op">=</span> deepcopy(griddedy)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>griddedy_sea <span class="op">=</span> deepcopy(griddedy)</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>griddedy_land[:, land_mask<span class="op">==</span><span class="dv">0</span>] <span class="op">=</span> np.nan</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>griddedy_sea[:, land_mask<span class="op">==</span><span class="dv">1</span>] <span class="op">=</span> np.nan</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>avg_temp_land <span class="op">=</span> surface_stat(griddedy_land, surface_perc)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>avg_temp_sea <span class="op">=</span> surface_stat(griddedy_sea, surface_perc)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>avg_temp_land[<span class="op">-</span><span class="dv">1</span>], avg_temp_sea[<span class="op">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="67">
+<pre><code>(0.9967666810102901, 0.3257011776518976)</code></pre>
+</div>
+</div>
+<p>The average global temperature anomaly over land is roughly 1° Celsius while the seas warmed roughly 0.3° Celsius. We can see the evolution of these figures over time in the plots below:</p>
+<div class="cell" data-execution_count="57">
+<div class="cell-output cell-output-display">
+<p><img src="absolute_files/figure-html/cell-49-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Clearly, there’s a much steeper trend in the rise of temperature over landmasses.</p>
+<p>What about the absolute change in temperature?</p>
+</section>
+<section id="absolute-changes" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="absolute-changes"><span class="header-section-number">9.2</span> Absolute Changes</h2>
+<p>We can apply the same mask to the absolute changes we’ve previously computed (<code>regimes</code>) and, once again, compute the global averages:</p>
+<div class="cell" data-execution_count="51">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>regimes_land <span class="op">=</span> deepcopy(regimes)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>regimes_sea <span class="op">=</span> deepcopy(regimes)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>regimes_land[:, land_mask<span class="op">==</span><span class="dv">0</span>] <span class="op">=</span> np.nan</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>regimes_sea[:, land_mask<span class="op">==</span><span class="dv">1</span>] <span class="op">=</span> np.nan</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>avg_temp_regimes_land <span class="op">=</span> surface_stat(regimes_land, surface_perc)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>avg_temp_regimes_sea <span class="op">=</span> surface_stat(regimes_sea, surface_perc)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>avg_temp_regimes_land[<span class="op">-</span><span class="dv">1</span>], avg_temp_regimes_sea[<span class="op">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="53">
+<pre><code>(1.4010793734655795, 0.625477496613651)</code></pre>
+</div>
+</div>
+<p>In 2021, the last data point in our series, landmasses are 1.4° Celsius warmer than they were in 1880 while the oceans are roughly 0.6° Celsius warmer. We can see the evolution of these figures over time in the plots below:</p>
+<div class="cell" data-execution_count="59">
+<div class="cell-output cell-output-display">
+<p><img src="absolute_files/figure-html/cell-52-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>It’s particularly striking the rise in temperature over land in the 1980s, 1990s, and early 2000s. In the 1990s, especially, we see both land and sea warming really fast.</p>
+</section>
+</section>
+<section id="saving-to-file" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Saving to File</h1>
+<p>The interactive plot in the main page uses two <code>.dat</code> files (<code>zvalues</code> and <code>evolution</code>) containing the raw data from NOAA, the estimated regimes we discussed above, and the imputed data points.</p>
+<p>The code below generates these two files.</p>
+<div class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filled series -&gt; array</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>n_years <span class="op">=</span> griddedy.shape[<span class="dv">0</span>]</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>filled_locs, filled_years <span class="op">=</span> np.where(np.isnan(griddedy.reshape(n_years, <span class="op">-</span><span class="dv">1</span>).T) </span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="op">&amp;</span> <span class="op">~</span>np.isnan(filled.reshape(n_years, <span class="op">-</span><span class="dv">1</span>).T))</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>filled_vals <span class="op">=</span> filled.reshape(n_years, <span class="op">-</span><span class="dv">1</span>).T[filled_locs, filled_years]</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>filled_arrays <span class="op">=</span> np.array([filled_locs, filled_years, filled_vals])</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="co"># changes -&gt; array</span></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>idxs_breaks <span class="op">=</span> np.cumsum(<span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">len</span>, changes[:, :, <span class="dv">0</span>].reshape(<span class="op">-</span><span class="dv">1</span>))))</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>vals_breaks <span class="op">=</span> np.array([v <span class="cf">for</span> s <span class="kw">in</span> changes[:, :, <span class="dv">0</span>].reshape(<span class="op">-</span><span class="dv">1</span>, ) </span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">for</span> v <span class="kw">in</span> s])</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>vals_avgs <span class="op">=</span> np.array([v <span class="cf">for</span> s <span class="kw">in</span> changes[:, :, <span class="dv">1</span>].reshape(<span class="op">-</span><span class="dv">1</span>, ) </span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>                      <span class="cf">for</span> v <span class="kw">in</span> np.concatenate([[np.nan], s])])</span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>chg_arrays <span class="op">=</span> np.zeros(shape<span class="op">=</span>(<span class="dv">3</span>, vals_breaks.shape[<span class="dv">0</span>])) <span class="op">*</span> np.nan</span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a>chg_arrays[<span class="dv">0</span>, :idxs_breaks.shape[<span class="dv">0</span>]] <span class="op">=</span> idxs_breaks</span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>chg_arrays[<span class="dv">1</span>] <span class="op">=</span> vals_breaks</span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>chg_arrays[<span class="dv">2</span>] <span class="op">=</span> vals_avgs</span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a>save2dat([griddedy, regimes], <span class="st">'zvalues'</span>, swap<span class="op">=</span><span class="va">False</span>, nan<span class="op">=-</span><span class="dv">999</span>)</span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a>save2dat([filled_arrays, chg_arrays], <span class="st">'evolution'</span>, swap<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 
-</main> <!-- /main -->
+</main>
+
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
